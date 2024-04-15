@@ -1,6 +1,7 @@
 baseURL: https://henrypham67.github.io 
 paginate: 5
 theme: PaperMod
+title: Henry's Site
 
 enableRobotsTXT: true
 buildDrafts: false
@@ -13,10 +14,10 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: ExampleSite
-  description: "ExampleSite description"
-  keywords: [Blog, Portfolio, PaperMod]
-  author: Me
+  title: Home
+  description: "Henry's Site"
+  keywords: [Blog, Portfolio, Technology]
+  author: Henry
   # author: ["Me", "You"] # multiple authors
   images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
@@ -24,7 +25,7 @@ params:
   disableThemeToggle: false
 
   ShowReadingTime: true
-  ShowShareButtons: true
+  ShowShareButtons: true 
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: false
@@ -56,12 +57,12 @@ params:
   # profile-mode
   profileMode:
     enabled: false # needs to be explicitly set
-    title: ExampleSite
-    subtitle: "This is subtitle"
-    imageUrl: "<img location>"
+    title: Henry Pham
+    subtitle: "DevOps Engineer"
+    imageUrl: "https://avatars.githubusercontent.com/u/43398131?v=4"
     imageWidth: 120
     imageHeight: 120
-    imageTitle: my image
+    imageTitle: avatar
     buttons:
       - name: Posts
         url: posts
@@ -71,15 +72,13 @@ params:
   # home-info mode
   homeInfoParams:
     Title: "Hi there \U0001F44B"
-    Content: Welcome to my blog
+    Content: Welcome to my blog where I share how I personally do something 
 
   socialIcons:
-    - name: x
-      url: "https://x.com/"
-    - name: stackoverflow
-      url: "https://stackoverflow.com"
+    - name: linkedin
+      url: "https://linkedin.com/in/pmhieu67"
     - name: github
-      url: "https://github.com/"
+      url: "https://github.com/henrypham67"
 
   analytics:
     google:
@@ -116,10 +115,6 @@ menu:
       name: About
       url: /about
       weight: 10
-    - identifier: Blog
-      name: Blog
-      url: /posts
-      weight: 20
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:
