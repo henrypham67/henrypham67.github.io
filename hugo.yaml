@@ -1,3 +1,4 @@
+define: &gh_username 'henrypham67'
 baseURL: https://henrypham67.github.io 
 paginate: 5
 theme: PaperMod
@@ -13,11 +14,11 @@ minify:
   minifyOutput: true
 
 params:
-  env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: Home
+  env: developing # to enable google analytics, opengraph, twitter-cards and schema.
+  title: Henry Pham
   description: "Henry's Site"
   keywords: [Blog, Portfolio, Technology]
-  author: Henry
+  author: Me
   # author: ["Me", "You"] # multiple authors
   images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
@@ -36,7 +37,7 @@ params:
   disableScrollToTop: false
   comments: false
   hidemeta: false
-  hideSummary: false
+  hideSummary: true
   showtoc: false
   tocopen: false
 
@@ -50,7 +51,7 @@ params:
     safari_pinned_tab: "<link / abs url>"
 
   label:
-    text: "Home"
+    text: "Henry Pham"
     icon: /apple-touch-icon.png
     iconHeight: 35
 
@@ -75,10 +76,12 @@ params:
     Content: Welcome to my blog where I share how I personally do something 
 
   socialIcons:
+    - name: email
+      url: "mailto:minhhieu060799@gmail.com"
     - name: linkedin
       url: "https://linkedin.com/in/pmhieu67"
     - name: github
-      url: "https://github.com/henrypham67"
+      url: "https://github.com/henrypham607"
 
   analytics:
     google:
@@ -94,7 +97,7 @@ params:
     hiddenInSingle: true # hide on single page
 
   editPost:
-    URL: "https://github.com/<path_to_repo>/content"
+    URL: "https://github.com/<path_to_repo>/content/posts"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 
@@ -110,11 +113,15 @@ params:
     limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
     keys: ["title", "permalink", "summary", "content"]
 menu:
-    main:
-    - identifier: About
-      name: About
-      url: /about
-      weight: 10
+  main:
+  - identifier: About
+    name: About
+    url: /about
+    weight: 10
+  - identifier: Search
+    name: 🔍
+    url: /search
+    weight: 20
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:
@@ -125,3 +132,9 @@ markup:
     # guessSyntax: true
     # lineNos: true
     # style: monokai
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
