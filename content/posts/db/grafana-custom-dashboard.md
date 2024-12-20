@@ -1,3 +1,9 @@
+---
+title: 'Grafana custom dashboard'
+date: 2024-10-26T16:00:33+07:00
+draft: true
+---
+
 https://medium.com/@hayounglim/prometheus-helm-how-to-import-custom-dashboards-into-grafana-using-terraform-e46ad70bd6fc
 https://github.com/helm/charts/blob/master/stable/grafana/README.md#sidecar-for-dashboards
 

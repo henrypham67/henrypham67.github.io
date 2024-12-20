@@ -1,6 +1,8 @@
 ---
 title: "[HOWTO] Monitor k8s cluster & app"
+date: 2024-10-26T16:00:33+07:00
 slug: k8s-prom
+draft: true
 ---
 
 deploy prome out or inside cluster?

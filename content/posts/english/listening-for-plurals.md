@@ -18,5 +18,8 @@ Note: Even though the plural form "crises" is spelled differently from the singu
 
 ## Look for indicator
 
-1. articles: a/an/the
-2. 
+articles:
+
+- a
+- an
+- the
