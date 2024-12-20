@@ -1,0 +1,48 @@
+@startuml
+
+hide footbox
+title Pod creation flow
+actor Client
+
+box "Control plane" #LightBlue
+participant "API Server"
+database ETCD
+control Scheduler
+end box
+
+box "Worker node"
+control Kubelet
+participant "Container Runtime"
+end box
+
+participant "Container Image Repository"
+
+Client -> "API Server": kubectl create nginx
+
+"API Server" -> ETCD: write
+"API Server" <-- ETCD : Ok
+
+Client <-- "API Server": Ok
+
+"API Server" <- Scheduler: query unscheduled Pods
+"API Server" --> Scheduler: return Pods
+"API Server" <- Scheduler: update unscheduled Pods with feasible Node
+
+"API Server" <- Kubelet: query PodsSpec of Node
+"API Server" --> Kubelet: respond
+Kubelet -> Kubelet: validate resource
+
+Kubelet -> "Container Runtime": docker run
+"Container Runtime" -> "Container Image Repository": pull image
+"Container Runtime" <-- "Container Image Repository": respond
+"Container Runtime" -> "Container Runtime": create container
+Kubelet <-- "Container Runtime": Ok
+
+"API Server" <- Kubelet: update Pod status
+"API Server" -> ETCD: write
+"API Server" <-- ETCD : Ok
+
+
+
+
+@enduml
