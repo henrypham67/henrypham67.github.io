@@ -80,8 +80,7 @@ NOP: A no-operation instruction that does nothing. It is often used for timing, 
 
 ### How a new pod is created in Kubernetes cluster?
 
-{{ $image := .Resources.GetMatch "pod-creation.jpg" }}
-<img src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}">
+![pod-creation](/content/posts/journal/images/pod-creation.jpg)
 
 ### how it score nodes???
 
