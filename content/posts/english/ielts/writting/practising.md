@@ -1,5 +1,8 @@
-# Writing 
-
+---
+title: 'Writing'
+date: 2024-11-22T16:00:33+07:00
+draft: true
+---
 ## Introduction
 
 4 sentences:
