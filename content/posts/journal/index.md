@@ -80,7 +80,7 @@ NOP: A no-operation instruction that does nothing. It is often used for timing, 
 
 ### How a new pod is created in Kubernetes cluster?
 
-![pod-creation](/content/posts/journal/images/pod-creation.jpg)
+![pod-creation](images/pod-creation.jpg)
 
 ### how it score nodes???
 
