@@ -22,15 +22,15 @@ draft: false
 - No Preemption (no process is able to force another process release resource)
 - Circular Wait
 
+### What is machine code
+
+Code executed by CPU
+
 ### machine code vs byte code
 
 | Machine code            | Byte code                             |
 | ----------------------- | ------------------------------------- |
 | instructions run by CPU | code run by virtual machine (JVM, V8) |
-
-### machine code la gi
-
-Code executed by CPU
 
 ### What kind of file does Rust compile to?
 
@@ -82,11 +82,11 @@ stack also, but content of it could be heap
 - Scheduler scores node (affinity, taint, toleration, ...) -> notify API server -> ETCD 
 - Kubelet get info from API server-> create container
 
-viet vi du chi tiet flow???
+### How a new pod is created in Kubernetes cluster?
 
 ![pod-creation](./pod-creation.jpg)
 
-### how it score nodes?
+### how it score nodes???
 
 ### manage platform service (operation) là làm những gì???
 
