@@ -1,4 +1,8 @@
-# Operation Deployment
+---
+title: 'Operation Deployment'
+date: 2024-10-26T16:00:33+07:00
+draft: true
+---
 
 1. reboot
 2. poweroff

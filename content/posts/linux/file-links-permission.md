@@ -1,4 +1,8 @@
-#
+---
+title: 'File - Link'
+date: 2024-10-26T16:00:33+07:00
+draft: true
+---
 
 ## Links
 
@@ -20,6 +24,7 @@
 ## File/Directory Permissions
 
 ## Positions
+
 from `ls -l` command
 
 1     : -/d/l -> file/directory/links \
