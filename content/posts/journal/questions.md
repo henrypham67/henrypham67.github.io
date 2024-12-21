@@ -62,10 +62,6 @@ NOP: A no-operation instruction that does nothing. It is often used for timing, 
 | scoped | ownership                         | program duration |
 | LIFO   | jumping from 1 pointer to another | data/BSS segment |
 
-### Rust's array is located in stack, how about tuple?
-
-stack also, but content of it could be heap
-
 ### what are the differences between &String and &str ?
 
 | Feature     | String                  | &str                       | &String                       |
