@@ -1,17 +1,17 @@
 ---
-title: '202411'
+title: 'Questions'
 date: 2024-11-22T16:00:33+07:00
 draft: false
 ---
 
 ### Block vs Object vs File storage
 
-Feature | Object Storage | Block Storage | Network Storage
---------|----------------|---------------|----------------
-Data Unit | Object (data + metadata) | Block (raw data chunks) | File (organized in paths)
-Access Method | Restful APIs | FC/iSCSI | NFS/SMB
-Use Case | Archival, media storage | Databases, VMs | Shared file access
-Performance | High scalability | High IOPS, low latency | Moderate performance
+| Feature       | Object Storage           | Block Storage           | Network Storage           |
+| ------------- | ------------------------ | ----------------------- | ------------------------- |
+| Data Unit     | Object (data + metadata) | Block (raw data chunks) | File (organized in paths) |
+| Access Method | Restful APIs             | FC/iSCSI                | NFS/SMB                   |
+| Use Case      | Archival, media storage  | Databases, VMs          | Shared file access        |
+| Performance   | High scalability         | High IOPS, low latency  | Moderate performance      |
 
 ### what are root causes of deadlock?
 
@@ -84,57 +84,11 @@ stack also, but content of it could be heap
 
 viet vi du chi tiet flow???
 
-```plantuml
-@startuml
-
-hide footbox
-title Pod creation flow
-actor Client
-
-box "Control plane" #LightBlue
-participant "API Server"
-database ETCD
-control Scheduler
-end box
-
-box "Worker node"
-control Kubelet
-participant "Container Runtime"
-end box
-
-participant "Container Image Repository"
-
-Client -> "API Server": kubectl create nginx
-
-"API Server" -> ETCD: write
-"API Server" <-- ETCD : Ok
-
-Client <-- "API Server": Ok
-
-"API Server" <- Scheduler: query unscheduled Pods
-"API Server" --> Scheduler: return Pods
-"API Server" <- Scheduler: update unscheduled Pods with feasible Node
-
-"API Server" <- Kubelet: query PodsSpec of Node
-"API Server" --> Kubelet: respond
-Kubelet -> Kubelet: validate resource
-
-Kubelet -> "Container Runtime": docker run
-"Container Runtime" -> "Container Image Repository": pull image
-"Container Runtime" <-- "Container Image Repository": respond
-"Container Runtime" -> "Container Runtime": create container
-Kubelet <-- "Container Runtime": Ok
-
-"API Server" <- Kubelet: update Pod status
-"API Server" -> ETCD: write
-"API Server" <-- ETCD : Ok
-
-@enduml
-```
+![pod-creation](./pod-creation.jpg)
 
 ### how it score nodes?
 
-### manage platform service (operation) là làm những gì?
+### manage platform service (operation) là làm những gì???
 
 - installation
 - incident management
@@ -156,7 +110,7 @@ scheduled downtime
 
 ### term dung de tranh downtime incident? plan han che code + ops ngu
 
-### What is Hardening? vs Computer Security???z
+### What is Hardening? vs Computer Security???
 
 1. Secure Coding ??
    1. scan code for sensitive content
@@ -210,7 +164,7 @@ apply tracing into Morpheuslabs, Zipkin
 
 worker gọi master khi nào và ngược lại?
 
-### Why API Server not sending request to Kubelet, but Kubelet have to make a request to API Server? Not yet
+### Why API Server not sending request to Kubelet, but Kubelet have to make a request to API Server??? Not yet
 
 1. Scalability
 
@@ -223,36 +177,24 @@ worker gọi master khi nào và ngược lại?
 - In pull model, Kubelet will operate the retry mechanism base on the last known state
 - API Server + ETCD act as a source of truth, they don't have to manage the Kubelet state
 
-apply tracing into Morpheuslabs, Zipkin
-
-svc la gi?
-
-t/c svc? non persistent
-
-svc -> Virtual IP -ip table rules-> POd's IP
-
-etcd why not postgres? why key-value
-
-Kafka has superior native stream processing capabilities.?
-
-progressive deployment???
-
-canary???
-
-performance?
+### How to measure performance of a (MySQL) server???
 
 - Throughput: Measures how many queries MySQL can process in a second. Example: 10,000 queries executed in 10 seconds = 1,000 QPS. Formula: `Throughput=Total Queries Executed/Execution Time​`
 - Latency (Execution Time): The time it takes to execute a single query.
 - Connections (Concurrency): Maximum concurrent connections supported without degradation in performance.
 - I/O Performance: Measures the speed of read/write operations
 
-before coredns is there any mechanism to resolve DNS in k8s cluster?
+### before coredns is there any mechanism to resolve DNS in k8s cluster???
 
-## 2024-12-08
+### tool draw -> code -> diagram, có gọi là diagram as code ko? dựa vào đâu gọi nó là diagram as code? 
 
-tool draw -> code -> diagram, có gọi là diagram as code ko? dựa vào đâu gọi nó là diagram as code? CODE as source of truth
+CODE as source of truth
 
-digital signatures, pub -> decrypt | prv -> encrypt
+### What is digital signatures
+
+### How pub/sec keys of CA are use in PKI?
+
+pub -> decrypt | prv -> encrypt
 
 normal case, encrypt = pub key because multi clients -> server decrypt (harder) => prv (need to protect) uses for decrypt
 
@@ -264,8 +206,6 @@ diff CA digital signature (DS) vs server DS
 
 - Authentication
 - Encryption
-
-### what is mTLS? in K8s use TLS or mTLS? where? HTTPS use TLS or mTLS?
 
 #### what is a protocol?
 
@@ -306,23 +246,12 @@ an extension of TLS, not only Server send certificate to Client but the Client a
 #### in K8s use TLS or mTLS? where?
 
 - mTLS is used to communicate internally in the cluster
-- TLS is used for external client to API Server
+- TLS is used for external client (e.g. a client send a request to a service in K8s cluster)
 
 ### can we CA in k8s cluster for web?
 
-
-### what will happen in low level when a client make a read and write request?
+- No, because the root CA can not be downloaded by client
 
 ### EKS authn request from kubectl?
 
-IAM role + access entry -> cluster user (where is it stored?)
-
-### kops update cluster ntn?
-
-### phan loai service (protocol, infra, platform/BE/FE svc, cong dung)
-
-### cai thien dua tren nguyen tac nao, uu diem cua principle, khi nao nen dung
-
-### tuple: fixed size, diff type, destructuring, period (.) followed by the index, empty tup = unit, express without return value -> unit
-
-### constant: must always be annotated.
+IAM role + access entry -> cluster user
