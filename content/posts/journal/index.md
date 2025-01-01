@@ -182,6 +182,8 @@ worker gọi master khi nào và ngược lại?
 
 ### before coredns is there any mechanism to resolve DNS in k8s cluster???
 
+Kube-DNS (https://github.com/kubernetes/dns)
+
 ### tool draw -> code -> diagram, có gọi là diagram as code ko? dựa vào đâu gọi nó là diagram as code? 
 
 CODE as source of truth
@@ -251,3 +253,69 @@ an extension of TLS, not only Server send certificate to Client but the Client a
 ### EKS authn request from kubectl?
 
 IAM role + access entry -> cluster user
+
+### Service to pod
+
+Over the different iterations of Kubernetes, the method in favor of enabling this has changed, but the two main methods are via 
+
+- the use of iptables (*mostly*) -> a pseudo L4 LB
+- the newer IP Virtual Server (IPVS)
+- eBPF-based dataplane (from cloud)
+
+### Network plugin-ins types
+
+- kubenet (simple, dont consume IP -> routing mechanism???)
+- plug-ins follows CNI specification
+
+### What is the term to describe the seperation of seperate control plane & data plane?
+
+Decoupling
+
+### What does Control/Data Plane need?
+
+Control plane: Consistent
+
+Data plane: Reliable
+
+### why ETCD is chosen?
+
+(C)onsistency & (P)artition Tolerance (NoSQL??) in CAP
+
+### Does ETCD still achieve high availability, after choosing CP?
+
+Yes, but it requires more effort to make it achieve HA
+
+- frequently backup
+- manage Quorum properly (odd-number)
+
+### Why should ETCD number of nodes be kept as odd-number?
+
+- optimally maximize High Availability, for example: both 3 nodes and 4 nodes cluster can tolerate 1 failure node
+- increase chance of partition
+
+### which object will do load balance Ingress or Service?
+
+Answer: both
+
+Ingress:
+
+- Layer 7
+- When the Service that Ingress routes to is a headless Service
+
+Service:
+
+- Layer 3
+
+### flow of IP allocation by CNI
+
+![cni-flow](images/cni-flow.jpg)
+
+### Fault Tolerance vs HA
+
+0 downtime vs 99,999%
+
+### Scaling vs Elastic
+
+elastic = scale in/out AND up/down
+while scaling up/out
+
