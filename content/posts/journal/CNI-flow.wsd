@@ -1,0 +1,36 @@
+' What are included in CNI spec?
+' - config format request
+' - protocol used to communicate
+' - how CR interpret network config
+' - plugin delegation
+' - what output should be return
+
+@startuml
+
+hide footbox
+
+title CNI flow
+
+participant Container
+participant Node
+participant "Container Runtime"
+participant "CNI plugins"
+participant "CNI config"
+note over of "CNI config"
+/etc/cni/net.d/
+on each nodes
+end note
+
+"Container Runtime" -> "Container Runtime": create container
+"Container Runtime" -> "CNI config": get CNI plugins used
+"Container Runtime" -> "CNI plugins": "ADD" operation
+
+Container <- "CNI plugins": create network interface
+Container <- "CNI plugins": allocate IP 
+
+Node <- "CNI plugins": create network interface
+"Container Runtime" <-- "CNI plugins": return result
+
+@enduml
+
+
