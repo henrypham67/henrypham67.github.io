@@ -1,0 +1,66 @@
+{{- define "main" }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">
+    {{ .Description }}
+  </div>
+  {{- end }}
+</header>
+
+<div class="post-content">
+  {{- $postPath := "content/posts" }}
+  {{- $categories := dict }}
+
+  {{- /* Group pages by their first-level directory under posts */ -}}
+  {{- range where .Site.RegularPages "Section" "posts" }}
+    {{- $path := .File.Path }}
+    {{- $pathParts := split $path "/" }}
+    {{- if gt (len $pathParts) 2 }}
+      {{- $category := index $pathParts 1 }}
+      {{- $existing := index $categories $category }}
+      {{- if $existing }}
+        {{- $updated := $existing | append . }}
+        {{- $categories = merge $categories (dict $category $updated) }}
+      {{- else }}
+        {{- $categories = merge $categories (dict $category (slice .)) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+  <ul class="terms-tags">
+    {{- range $category, $pages := $categories }}
+    {{- $categoryTitle := $category | title | replaceRE "^Ai$" "AI" | replaceRE "^Aws$" "AWS" }}
+    <li>
+      <a href="/posts/{{ $category }}/">
+        {{ $categoryTitle }}
+        <sup><strong><sup>{{ len $pages }}</sup></strong></sup>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+
+  {{- /* List posts by category */ -}}
+  {{- range $category, $pages := $categories }}
+  {{- $categoryTitle := $category | title | replaceRE "^Ai$" "AI" | replaceRE "^Aws$" "AWS" }}
+  <div class="category-group" style="margin-top: 2rem;">
+    <h2 id="{{ $category }}">{{ $categoryTitle }}</h2>
+    <ul style="list-style-type: none; padding: 0;">
+      {{- range sort $pages ".Date" "desc" }}
+      <li style="margin-bottom: 0.75rem;">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <span style="color: var(--secondary); font-size: 0.875rem; margin-left: 0.5rem;">
+          {{ .Date.Format "Jan 2, 2006" }}
+        </span>
+        {{- if .Draft }}
+        <sup style="color: var(--tertiary);">draft</sup>
+        {{- end }}
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+</div>
+
+{{- end }}
