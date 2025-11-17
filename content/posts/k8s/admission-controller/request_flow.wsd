@@ -1,0 +1,18 @@
+@startuml
+title Kubernetes Admission Controller Request Flow
+
+actor Client
+rectangle "Kubernetes API Server" {
+    rectangle "Authentication & Authorization" as Auth
+    rectangle "Mutating Admission Controllers" as Mutate
+    rectangle "Validating Admission Controllers" as Validate
+    rectangle "Schema Object Validator" as SOV
+}
+
+Client -> "Kubernetes API Server": Sends request (e.g., create pod)
+Auth -> Mutate
+Mutate -> SOV
+
+
+
+@enduml
