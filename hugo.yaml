@@ -74,7 +74,7 @@ params:
   # home-info mode
   homeInfoParams:
     Title: "Hi there \U0001F44B"
-    Content: Welcome to my blog where I share how I personally do something 
+    Content: Welcome to my blog where I share my personal experiences and learnings. Please note that the information here reflects my understanding and may contain inaccuracies. I appreciate any feedback or corrections you might have.
 
   socialIcons:
     - name: email
