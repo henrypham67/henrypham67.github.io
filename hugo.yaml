@@ -1,6 +1,7 @@
 define: &gh_username 'henrypham67'
-baseURL: https://henrypham67.github.io 
-paginate: 5
+baseURL: https://henrypham67.github.io
+pagination:
+  pagerSize: 5
 theme: PaperMod
 title: Henry's Site
 
