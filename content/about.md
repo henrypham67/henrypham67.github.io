@@ -11,4 +11,8 @@ My full name:
 
 Go by the name: Henry
 
+National: Vietnamese
+
+Sport: badminton
+
 Favorite drink: Matcha
