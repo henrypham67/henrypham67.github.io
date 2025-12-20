@@ -1,0 +1,43 @@
+@startuml gitops-push-vs-pull
+
+!define RECTANGLE class
+
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+title GitOps: Push-based vs Pull-based Deployment Models
+
+' Push-based model
+package "Traditional Push-based Deployment" as push {
+    actor Developer1 as dev1 #LightBlue
+    rectangle "Local Machine" as local1 #LightYellow {
+        rectangle "kubectl apply" as kubectl #Orange
+    }
+    database "Kubernetes\nCluster" as cluster1 #LightGreen
+
+    dev1 -down-> kubectl : "runs commands"
+    kubectl -down-> cluster1 : "pushes config"
+}
+
+' Spacing
+push -[hidden]right- pull
+
+' Pull-based model (GitOps)
+package "GitOps Pull-based Deployment" as pull {
+    actor Developer2 as dev2 #LightBlue
+    rectangle "Git Repository" as git #LightCoral {
+        rectangle "YAML Manifests" as yaml #White
+    }
+    rectangle "Kubernetes Cluster" as cluster2 #LightGreen {
+        rectangle "FluxCD/ArgoCD" as gitops #Purple
+        rectangle "Resources" as resources #White
+    }
+
+    dev2 -down-> git : "git commit\ngit push"
+    gitops -up-> git : "pulls changes\n(every 5min)"
+    gitops -down-> resources : "reconciles"
+}
+
+@enduml
