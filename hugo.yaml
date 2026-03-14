@@ -119,6 +119,14 @@ menu:
     name: Categories
     url: /categories/
     weight: 1
+  - identifier: quiz-flashcards
+    name: Quiz & Flashcards
+    url: /quiz-flashcards/
+    weight: 3
+  - identifier: daily-practice
+    name: Daily Practice
+    url: /daily-practice/
+    weight: 5
   - identifier: about
     name: About
     url: /about

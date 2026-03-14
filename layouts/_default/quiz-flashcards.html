@@ -1,0 +1,79 @@
+{{- define "main" }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">{{ .Description }}</div>
+  {{- end }}
+</header>
+
+<div class="post-content">
+  {{- /* Collect pages with quiz or flashcard data */ -}}
+  {{- $interactivePages := slice }}
+  {{- range where .Site.RegularPages "Section" "posts" }}
+    {{- if or .Params.quiz .Params.flashcards }}
+      {{- $interactivePages = $interactivePages | append . }}
+    {{- end }}
+  {{- end }}
+
+  {{- if eq (len $interactivePages) 0 }}
+  <p style="color: var(--secondary);">No posts with quizzes or flashcards found yet.</p>
+  {{- else }}
+
+  {{- /* Group by first-level directory */ -}}
+  {{- $categories := dict }}
+  {{- range $interactivePages }}
+    {{- $pathParts := split .File.Path "/" }}
+    {{- if gt (len $pathParts) 2 }}
+      {{- $category := index $pathParts 1 }}
+      {{- $existing := index $categories $category }}
+      {{- if $existing }}
+        {{- $categories = merge $categories (dict $category ($existing | append .)) }}
+      {{- else }}
+        {{- $categories = merge $categories (dict $category (slice .)) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+  {{- /* Tag cloud with counts */ -}}
+  <ul class="terms-tags">
+    {{- range $category, $pages := $categories }}
+    {{- $categoryTitle := $category | title | replaceRE "^Ai$" "AI" | replaceRE "^Aws$" "AWS" }}
+    <li>
+      <a href="#{{ $category }}">
+        {{ $categoryTitle }}
+        <sup><strong><sup>{{ len $pages }}</sup></strong></sup>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+
+  {{- /* Posts per category */ -}}
+  {{- range $category, $pages := $categories }}
+  {{- $categoryTitle := $category | title | replaceRE "^Ai$" "AI" | replaceRE "^Aws$" "AWS" }}
+  <div class="category-group" style="margin-top: 2rem;">
+    <h2 id="{{ $category }}">{{ $categoryTitle }}</h2>
+    <ul style="list-style-type: none; padding: 0;">
+      {{- range sort $pages ".Date" "desc" }}
+      <li style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <span style="color: var(--secondary); font-size: 0.875rem;">{{ .Date.Format "Jan 2, 2006" }}</span>
+        {{- if .Draft }}
+        <sup style="color: var(--tertiary);">draft</sup>
+        {{- end }}
+        {{- if .Params.quiz }}
+        <span class="badge badge-quiz">Quiz</span>
+        {{- end }}
+        {{- if .Params.flashcards }}
+        <span class="badge badge-flashcards">Flashcards</span>
+        {{- end }}
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+
+  {{- end }}
+</div>
+
+{{- end }}

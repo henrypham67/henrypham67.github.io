@@ -1,0 +1,16 @@
+{{- $q := .Get "question" -}}
+{{- $a := .Get "answer" -}}
+<div class="flashcard-container">
+  <div class="flashcard" onclick="this.classList.toggle('flipped')" role="button" aria-label="Flip card">
+    <div class="flashcard-front">
+      <div class="flashcard-label">Question</div>
+      <div class="flashcard-text">{{ $q }}</div>
+      <div class="flashcard-hint">Click to reveal answer</div>
+    </div>
+    <div class="flashcard-back">
+      <div class="flashcard-label">Answer</div>
+      <div class="flashcard-text">{{ $a }}</div>
+      <div class="flashcard-hint">Click to flip back</div>
+    </div>
+  </div>
+</div>

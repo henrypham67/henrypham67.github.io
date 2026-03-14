@@ -1,0 +1,183 @@
+{{- define "main" }}
+
+{{- /* Aggregate quiz questions and flashcards from all posts */ -}}
+{{- $allQuestions := slice }}
+{{- $allCards := slice }}
+{{- range where .Site.RegularPages "Section" "posts" }}
+  {{- if .Params.quiz }}
+    {{- range .Params.quiz.questions }}
+      {{- $allQuestions = $allQuestions | append . }}
+    {{- end }}
+  {{- end }}
+  {{- if .Params.flashcards }}
+    {{- range .Params.flashcards }}
+      {{- $allCards = $allCards | append . }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- $questions := first 5 (shuffle $allQuestions) }}
+{{- $cards := first 5 (shuffle $allCards) }}
+{{- $quizId := "daily-quiz" }}
+{{- $deckId := "daily-deck" }}
+{{- $letters := slice "A" "B" "C" "D" "E" "F" }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">{{ .Description }}</div>
+  {{- end }}
+</header>
+
+<div class="post-content">
+
+  {{- /* ===== QUIZ SECTION ===== */ -}}
+  <h2>Quiz</h2>
+  {{- if eq (len $questions) 0 }}
+  <p style="color: var(--secondary);">No quiz questions available yet.</p>
+  {{- else }}
+  <div class="quiz-container" id="{{ $quizId }}">
+    <div class="quiz-header">
+      <p class="quiz-title">Daily Quiz — {{ len $questions }} questions</p>
+    </div>
+    <div class="quiz-body">
+      {{ range $i, $q := $questions }}
+      <div class="quiz-question{{ if eq $i 0 }} active{{ end }}" id="{{ $quizId }}-q{{ $i }}">
+        <div class="quiz-question-num">Question {{ add $i 1 }} of {{ len $questions }}</div>
+        <div class="quiz-question-text">{{ $q.q }}</div>
+        <div class="quiz-options">
+          {{ range $j, $opt := $q.options }}
+          <button class="quiz-option"
+            onclick="quizAnswer('{{ $quizId }}', {{ $i }}, {{ $j }}, {{ $q.correct }}, {{ len $questions }})"
+            id="{{ $quizId }}-q{{ $i }}-o{{ $j }}">
+            <span class="quiz-option-letter">{{ index $letters $j }}</span>
+            <span>{{ $opt }}</span>
+          </button>
+          {{ end }}
+        </div>
+        <div class="quiz-feedback" id="{{ $quizId }}-q{{ $i }}-fb"></div>
+        <div class="quiz-footer">
+          <span class="quiz-progress" id="{{ $quizId }}-q{{ $i }}-prog"></span>
+          <button class="quiz-next-btn" id="{{ $quizId }}-q{{ $i }}-next"
+            onclick="quizNext('{{ $quizId }}', {{ $i }}, {{ len $questions }})">
+            {{ if eq (add $i 1) (len $questions) }}See Results{{ else }}Next &#8594;{{ end }}
+          </button>
+        </div>
+      </div>
+      {{ end }}
+      <div class="quiz-score" id="{{ $quizId }}-score">
+        <div class="quiz-score-value" id="{{ $quizId }}-score-val"></div>
+        <div class="quiz-score-label">correct answers</div>
+        <br>
+        <button class="quiz-restart-btn" onclick="quizRestart('{{ $quizId }}', {{ len $questions }})">Try Again</button>
+      </div>
+    </div>
+  </div>
+  {{- end }}
+
+  {{- /* ===== FLASHCARDS SECTION ===== */ -}}
+  <h2 style="margin-top: 2.5rem;">Flashcards</h2>
+  {{- if eq (len $cards) 0 }}
+  <p style="color: var(--secondary);">No flashcards available yet.</p>
+  {{- else }}
+  <div class="flashcard-deck" id="{{ $deckId }}">
+    <div class="flashcard-deck-header">
+      <span class="flashcard-deck-title">Flashcards</span>
+      <span class="flashcard-deck-counter" id="{{ $deckId }}-counter">1 / {{ len $cards }}</span>
+    </div>
+    <div class="flashcard-container">
+      <div class="flashcard" id="{{ $deckId }}-card" onclick="this.classList.toggle('flipped')" role="button" aria-label="Flip card">
+        <div class="flashcard-front">
+          <div class="flashcard-label">Question</div>
+          <div class="flashcard-text" id="{{ $deckId }}-q">{{ (index $cards 0).q }}</div>
+          <div class="flashcard-hint">Click to reveal answer</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="flashcard-label">Answer</div>
+          <div class="flashcard-text" id="{{ $deckId }}-a">{{ (index $cards 0).a }}</div>
+          <div class="flashcard-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-nav">
+      <button class="flashcard-btn" onclick="deckNav('{{ $deckId }}', -1)">&#8592; Prev</button>
+      <button class="flashcard-btn" onclick="deckNav('{{ $deckId }}', 1)">Next &#8594;</button>
+    </div>
+  </div>
+  {{- end }}
+
+</div>
+
+<script>
+window.__quizState = window.__quizState || {};
+if (!window.quizAnswer) {
+  window.quizAnswer = function (id, qi, oi, correct, total) {
+    if (!__quizState[id]) __quizState[id] = { score: 0, answered: {} };
+    var state = __quizState[id];
+    if (state.answered[qi]) return;
+    state.answered[qi] = true;
+    var isCorrect = oi === correct;
+    if (isCorrect) state.score++;
+    document.querySelectorAll('#' + id + '-q' + qi + ' .quiz-option').forEach(function (o) { o.disabled = true; });
+    document.getElementById(id + '-q' + qi + '-o' + oi).classList.add(isCorrect ? 'correct' : 'incorrect');
+    if (!isCorrect) document.getElementById(id + '-q' + qi + '-o' + correct).classList.add('correct');
+    var fb = document.getElementById(id + '-q' + qi + '-fb');
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+    fb.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Incorrect.';
+    document.getElementById(id + '-q' + qi + '-prog').textContent = state.score + ' correct so far';
+    document.getElementById(id + '-q' + qi + '-next').style.display = 'inline-block';
+  };
+  window.quizNext = function (id, qi, total) {
+    document.getElementById(id + '-q' + qi).classList.remove('active');
+    if (qi + 1 < total) {
+      document.getElementById(id + '-q' + (qi + 1)).classList.add('active');
+    } else {
+      var score = (__quizState[id] || {}).score || 0;
+      document.getElementById(id + '-score').style.display = 'block';
+      document.getElementById(id + '-score-val').textContent = score + ' / ' + total;
+    }
+  };
+  window.quizRestart = function (id, total) {
+    __quizState[id] = { score: 0, answered: {} };
+    document.getElementById(id + '-score').style.display = 'none';
+    for (var i = 0; i < total; i++) {
+      var q = document.getElementById(id + '-q' + i);
+      q.classList.toggle('active', i === 0);
+      q.querySelectorAll('.quiz-option').forEach(function (o) {
+        o.disabled = false;
+        o.className = 'quiz-option';
+      });
+      document.getElementById(id + '-q' + i + '-fb').className = 'quiz-feedback';
+      document.getElementById(id + '-q' + i + '-fb').textContent = '';
+      document.getElementById(id + '-q' + i + '-next').style.display = 'none';
+      document.getElementById(id + '-q' + i + '-prog').textContent = '';
+    }
+  };
+}
+</script>
+
+{{- if gt (len $cards) 0 }}
+<script>
+(function () {
+  window.__flashDecks = window.__flashDecks || {};
+  window.__flashDecks["{{ $deckId }}"] = {
+    cards: [{{ range $cards }}{ q: {{ .q | jsonify }}, a: {{ .a | jsonify }} },{{ end }}],
+    current: 0
+  };
+})();
+if (!window.deckNav) {
+  window.deckNav = function (id, dir) {
+    var deck = window.__flashDecks[id];
+    if (!deck) return;
+    deck.current = (deck.current + dir + deck.cards.length) % deck.cards.length;
+    var card = document.getElementById(id + '-card');
+    card.classList.remove('flipped');
+    document.getElementById(id + '-q').textContent = deck.cards[deck.current].q;
+    document.getElementById(id + '-a').textContent = deck.cards[deck.current].a;
+    document.getElementById(id + '-counter').textContent = (deck.current + 1) + ' / ' + deck.cards.length;
+  };
+}
+</script>
+{{- end }}
+
+{{- end }}
