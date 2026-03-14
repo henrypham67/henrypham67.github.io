@@ -1,5 +1,5 @@
 ---
-title: 'Carbbean island'
+title: 'Caribbean Island'
 date: 2024-08-18T18:15:00+07:00
 draft: true
 ---

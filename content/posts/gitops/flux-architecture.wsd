@@ -1,0 +1,117 @@
+@startuml flux-architecture
+
+!define RECTANGLE class
+
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam componentStyle rectangle
+
+title FluxCD Modular Architecture
+
+' External sources
+rectangle "External Sources" as sources #LightYellow {
+    component "Git Repositories" as git #LightCoral
+    component "Helm Repositories" as helm #LightBlue
+    component "OCI Registries" as oci #LightGreen
+}
+
+' Flux Controllers
+rectangle "Flux System (flux-system namespace)" as flux #E8E8E8 {
+    component "source-controller" as source #9370DB {
+        note bottom
+            Manages source artifacts:
+            - GitRepository
+            - HelmRepository
+            - HelmChart
+            - Bucket
+        end note
+    }
+
+    component "kustomize-controller" as kustomize #4169E1 {
+        note bottom
+            Manages:
+            - Kustomization
+            - Applies manifests
+            - Health checks
+        end note
+    }
+
+    component "helm-controller" as helmctrl #20B2AA {
+        note bottom
+            Manages:
+            - HelmRelease
+            - Chart deployments
+            - Rollbacks
+        end note
+    }
+
+    component "notification-controller" as notify #FF6347 {
+        note bottom
+            Manages:
+            - Alert
+            - Provider
+            - Receiver
+        end note
+    }
+
+    component "image-reflector-controller" as imagereflect #FFD700 {
+        note bottom
+            (Optional)
+            Scans container
+            registries
+        end note
+    }
+
+    component "image-automation-controller" as imageauto #FFA500 {
+        note bottom
+            (Optional)
+            Updates Git with
+            new image tags
+        end note
+    }
+}
+
+' Kubernetes cluster
+database "Kubernetes API Server" as k8s #32CD32
+
+' Notification targets
+cloud "Notification Targets" as targets #E0E0E0 {
+    component "Slack" as slack
+    component "Discord" as discord
+    component "Webhook" as webhook
+}
+
+' Connections
+git -down-> source
+helm -down-> source
+oci -down-> source
+
+source -down-> kustomize : "provides\nartifacts"
+source -down-> helmctrl : "provides\ncharts"
+
+kustomize -down-> k8s : "applies\nmanifests"
+helmctrl -down-> k8s : "installs/upgrades\nHelm releases"
+
+kustomize -right-> notify : "events"
+helmctrl -right-> notify : "events"
+source -up-> notify : "events"
+
+notify -down-> slack
+notify -down-> discord
+notify -down-> webhook
+
+imagereflect -up-> source : "uses"
+imageauto -up-> source : "uses"
+imageauto -up-> git : "commits\nupdates"
+
+note bottom of flux
+    **Modular Design:**
+    - Each controller is independent
+    - Can run separately or together
+    - Enables lean installations
+    - Easy to upgrade components
+end note
+
+@enduml

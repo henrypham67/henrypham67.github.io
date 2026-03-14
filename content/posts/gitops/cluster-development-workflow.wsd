@@ -1,0 +1,38 @@
+@startuml
+title Cluster Development Workflow with FluxCD
+
+actor Developer
+participant "Git Repository" as Git
+participant "FluxInstance" as Flux
+participant "Kubernetes\nCluster" as K8s
+
+== Current Workflow (Has Pruning Issue) ==
+
+Developer -> Git: 1. Checkout new branch (feature-x)
+activate Git
+
+Developer -> Flux: 2. Edit sync: branch master → feature-x
+activate Flux
+Flux -> Git: Reconcile from feature-x
+Git --> Flux: New/updated manifests
+
+Flux -> K8s: 3. Apply new resources
+activate K8s
+note right of K8s: Resources created\n(e.g., new Deployment)
+
+Developer -> Git: 4. Add/update resources
+Git --> Flux: Sync changes
+Flux -> K8s: Apply updates
+
+Developer -> Git: 5. Merge feature-x → master
+Developer -> Flux: 6. Change sync back to master
+
+Flux -> Git: Reconcile from master
+note over Flux,K8s #FFB6C1: ⚠️ PROBLEM: Resources added\nin feature-x but not yet\nin master get PRUNED!
+Flux -> K8s: Prune orphaned resources
+destroy K8s
+
+deactivate Git
+deactivate Flux
+
+@enduml

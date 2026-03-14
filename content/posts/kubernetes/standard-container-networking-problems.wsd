@@ -1,0 +1,92 @@
+@startuml standard-container-networking
+
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam componentStyle rectangle
+skinparam rectangleBorderColor #888888
+skinparam noteBorderColor #CC0000
+skinparam noteFontColor #CC0000
+skinparam noteBackgroundColor #FFF0F0
+
+title Standard Container Networking
+
+rectangle "Node" as node #F5F5F5 {
+
+    rectangle "Pod  (network namespace)" as pod #BDD7EE {
+
+        component "Process" as process #E2EFDA
+        component "Socket" as socket #E2EFDA
+        component "iptables INPUT" as ip_input #D9E1F2
+        component "Linux Routing" as lr_pod #D9E1F2
+        component "iptables PREROUTING mangle" as ip_pre_pod #D9E1F2
+        component "iptables Conntrack" as conntrack_pod #D9E1F2
+
+        process -down-> socket
+        socket -left-> ip_input
+        ip_input -down-> lr_pod : " "
+        lr_pod -down-> ip_pre_pod
+        conntrack_pod -right-> ip_input : monitors
+        conntrack_pod -right-> lr_pod : monitors
+        conntrack_pod -right-> ip_pre_pod : monitors
+    }
+
+    note as n_conntrack_overhead
+        **iptables Conntrack**
+        **Overhead**
+    end note
+
+    component "veth\n(pod side)" as veth_pod_side #E2EFDA
+    component "veth\n(node side)" as veth_node_side #D9E1F2
+
+    note as n_context_switch #FFE0E0
+        **Context-Switch**
+        **Overhead**
+    end note
+
+    rectangle "Node network namespace" as node_ns #E8E8E8 {
+
+        component "iptables Conntrack " as conntrack_node #C6D9C6
+        component "iptables FORWARD" as ip_forward #C6D9C6
+        component "iptables POSTROUTING mangle" as ip_post_mangle #C6D9C6
+        component "iptables POSTROUTING nat" as ip_post_nat #C6D9C6
+        component "Linux Routing " as lr_node #C6D9C6
+        component "iptables PREROUTING nat" as ip_pre_nat #C6D9C6
+        component "iptables PREROUTING mangle " as ip_pre_node #C6D9C6
+        component "eth0" as eth0 #D9D9D9
+
+        conntrack_node -right-> ip_forward : monitors
+        conntrack_node -right-> lr_node : monitors
+        conntrack_node -right-> ip_pre_nat : monitors
+
+        ip_forward -right-> ip_post_mangle
+        ip_post_mangle -right-> ip_post_nat
+        ip_forward -down-> lr_node
+        lr_node -down-> ip_pre_nat
+        ip_pre_nat -right-> ip_pre_node
+        ip_pre_node -down-> eth0
+    }
+
+    note as n_iptables_overhead_top #FFE0E0
+        **iptables Overhead**
+    end note
+
+    note as n_iptables_overhead_bot #FFE0E0
+        **iptables Overhead**
+    end note
+
+    ip_pre_pod -down-> veth_pod_side
+    veth_pod_side -down-> veth_node_side
+    veth_node_side -down-> ip_forward
+
+    n_conntrack_overhead .. conntrack_pod
+    n_context_switch .. veth_pod_side
+    n_context_switch .. veth_node_side
+    n_iptables_overhead_top .. ip_forward
+    n_iptables_overhead_top .. ip_post_nat
+    n_iptables_overhead_bot .. ip_pre_nat
+    n_iptables_overhead_bot .. ip_pre_node
+}
+
+@enduml

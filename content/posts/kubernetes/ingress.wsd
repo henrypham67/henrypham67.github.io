@@ -1,0 +1,66 @@
+@startuml ingress-container-networking
+
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam componentStyle rectangle
+skinparam rectangleBorderColor #888888
+skinparam noteBorderColor #CC0000
+skinparam noteFontColor #CC0000
+skinparam noteBackgroundColor #FFF0F0
+
+title Ingress Container Networking
+
+rectangle "Node" as node #F5F5F5 {
+
+    rectangle "Node network namespace" as node_ns #E8E8E8 {
+
+        component "iptables POSTROUTING mangle" as ip_post_mangle #C6D9C6
+        component "iptables POSTROUTING nat" as ip_post_nat #C6D9C6
+        component "iptables Conntrack " as conntrack_node #C6D9C6
+        component "Linux Routing " as lr_node #C6D9C6
+        component "iptables PREROUTING nat" as ip_pre_nat #C6D9C6
+        component "iptables FORWARD" as ip_forward #C6D9C6
+        component "iptables PREROUTING mangle " as ip_pre_node #C6D9C6
+        component "eth0" as eth0 #D9D9D9
+        component "veth\n(node side)" as veth_node #D9E1F2
+
+        eth0 -right-> ip_pre_node
+        ip_pre_node -up-> ip_pre_nat
+        ip_pre_nat -up-> lr_node
+        lr_node -up-> ip_forward
+        ip_forward -right-> ip_post_mangle
+        ip_post_mangle -right-> ip_post_nat
+        ip_post_nat -up-> veth_node
+
+        conntrack_node -right-> ip_forward : monitors
+        conntrack_node -right-> lr_node : monitors
+        conntrack_node -down-> ip_pre_nat : monitors
+    }
+
+    rectangle "Pod  (network namespace)" as pod #BDD7EE {
+
+        component "Process" as process #E2EFDA
+        component "Socket" as socket #E2EFDA
+        component "iptables INPUT" as ip_input #D9E1F2
+        component "Linux Routing" as lr_pod #D9E1F2
+        component "iptables PREROUTING mangle" as ip_pre_pod #D9E1F2
+        component "iptables Conntrack" as conntrack_pod #D9E1F2
+        component "veth\n(pod side)" as veth_pod #E2EFDA
+
+        veth_pod -down-> ip_pre_pod
+        ip_pre_pod -down-> lr_pod
+        lr_pod -down-> ip_input
+        ip_input -down-> socket
+        socket -down-> process
+
+        conntrack_pod -right-> ip_input : monitors
+        conntrack_pod -right-> lr_pod : monitors
+        conntrack_pod -right-> ip_pre_pod : monitors
+    }
+
+    veth_node -right-> veth_pod
+}
+
+@enduml

@@ -17,4 +17,3 @@ AmazonEventBridgeFullAccess
 ```
 
 why `AmazonSQSFullAccess` and `AmazonEventBridgeFullAccess`?
-

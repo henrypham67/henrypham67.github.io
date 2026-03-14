@@ -1,2 +1,10 @@
 public/
 .idea
+__pycache__
+.DS_Store
+.hugo_build.lock
+resources/
+.envrc
+*.bak
+*.jar
+**/*.pdf

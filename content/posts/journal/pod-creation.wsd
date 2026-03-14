@@ -19,7 +19,7 @@ participant "Container Image Repository"
 
 Client -> "API Server": kubectl create nginx
 
-"API Server" -> ETCD: write
+"API Server" -> ETCD: write a new unscheduled pod
 "API Server" <-- ETCD : Ok
 
 Client <-- "API Server": Ok
