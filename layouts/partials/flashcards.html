@@ -1,0 +1,48 @@
+{{- $cards := .Params.flashcards -}}
+{{- $id := printf "deck-%s" .File.UniqueID -}}
+<div class="flashcard-deck" id="{{ $id }}">
+  <div class="flashcard-deck-header">
+    <span class="flashcard-deck-title">Flashcards</span>
+    <span class="flashcard-deck-counter" id="{{ $id }}-counter">1 / {{ len $cards }}</span>
+  </div>
+  <div class="flashcard-container">
+    <div class="flashcard" id="{{ $id }}-card" onclick="this.classList.toggle('flipped')" role="button" aria-label="Flip card">
+      <div class="flashcard-front">
+        <div class="flashcard-label">Question</div>
+        <div class="flashcard-text" id="{{ $id }}-q">{{ (index $cards 0).q }}</div>
+        <div class="flashcard-hint">Click to reveal answer</div>
+      </div>
+      <div class="flashcard-back">
+        <div class="flashcard-label">Answer</div>
+        <div class="flashcard-text" id="{{ $id }}-a">{{ (index $cards 0).a }}</div>
+        <div class="flashcard-hint">Click to flip back</div>
+      </div>
+    </div>
+  </div>
+  <div class="flashcard-nav">
+    <button class="flashcard-btn" onclick="deckNav('{{ $id }}', -1)">&#8592; Prev</button>
+    <button class="flashcard-btn" onclick="deckNav('{{ $id }}', 1)">Next &#8594;</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  window.__flashDecks = window.__flashDecks || {};
+  window.__flashDecks[{{ $id }}] = {
+    cards: [{{ range $cards }}{ q: {{ .q | jsonify }}, a: {{ .a | jsonify }} },{{ end }}],
+    current: 0
+  };
+})();
+if (!window.deckNav) {
+  window.deckNav = function (id, dir) {
+    var deck = window.__flashDecks[id];
+    if (!deck) return;
+    deck.current = (deck.current + dir + deck.cards.length) % deck.cards.length;
+    var card = document.getElementById(id + '-card');
+    card.classList.remove('flipped');
+    document.getElementById(id + '-q').textContent = deck.cards[deck.current].q;
+    document.getElementById(id + '-a').textContent = deck.cards[deck.current].a;
+    document.getElementById(id + '-counter').textContent = (deck.current + 1) + ' / ' + deck.cards.length;
+  };
+}
+</script>

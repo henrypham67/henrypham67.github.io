@@ -1,0 +1,89 @@
+{{- $quiz := .Params.quiz -}}
+{{- $id := printf "quiz-%s" .File.UniqueID -}}
+{{- $questions := $quiz.questions -}}
+{{- $letters := slice "A" "B" "C" "D" "E" "F" -}}
+<div class="quiz-container" id="{{ $id }}">
+  <div class="quiz-header">
+    <p class="quiz-title">{{ $quiz.title | default "Quiz" }}</p>
+  </div>
+  <div class="quiz-body">
+    {{ range $i, $q := $questions }}
+    <div class="quiz-question{{ if eq $i 0 }} active{{ end }}" id="{{ $id }}-q{{ $i }}">
+      <div class="quiz-question-num">Question {{ add $i 1 }} of {{ len $questions }}</div>
+      <div class="quiz-question-text">{{ $q.q }}</div>
+      <div class="quiz-options">
+        {{ range $j, $opt := $q.options }}
+        <button class="quiz-option"
+          onclick="quizAnswer('{{ $id }}', {{ $i }}, {{ $j }}, {{ $q.correct }}, {{ len $questions }})"
+          id="{{ $id }}-q{{ $i }}-o{{ $j }}">
+          <span class="quiz-option-letter">{{ index $letters $j }}</span>
+          <span>{{ $opt }}</span>
+        </button>
+        {{ end }}
+      </div>
+      <div class="quiz-feedback" id="{{ $id }}-q{{ $i }}-fb"></div>
+      <div class="quiz-footer">
+        <span class="quiz-progress" id="{{ $id }}-q{{ $i }}-prog"></span>
+        <button class="quiz-next-btn" id="{{ $id }}-q{{ $i }}-next"
+          onclick="quizNext('{{ $id }}', {{ $i }}, {{ len $questions }})">
+          {{ if eq (add $i 1) (len $questions) }}See Results{{ else }}Next &#8594;{{ end }}
+        </button>
+      </div>
+    </div>
+    {{ end }}
+    <div class="quiz-score" id="{{ $id }}-score">
+      <div class="quiz-score-value" id="{{ $id }}-score-val"></div>
+      <div class="quiz-score-label">correct answers</div>
+      <br>
+      <button class="quiz-restart-btn" onclick="quizRestart('{{ $id }}', {{ len $questions }})">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.__quizState = window.__quizState || {};
+if (!window.quizAnswer) {
+  window.quizAnswer = function (id, qi, oi, correct, total) {
+    if (!__quizState[id]) __quizState[id] = { score: 0, answered: {} };
+    var state = __quizState[id];
+    if (state.answered[qi]) return;
+    state.answered[qi] = true;
+    var isCorrect = oi === correct;
+    if (isCorrect) state.score++;
+    document.querySelectorAll('#' + id + '-q' + qi + ' .quiz-option').forEach(function (o) { o.disabled = true; });
+    document.getElementById(id + '-q' + qi + '-o' + oi).classList.add(isCorrect ? 'correct' : 'incorrect');
+    if (!isCorrect) document.getElementById(id + '-q' + qi + '-o' + correct).classList.add('correct');
+    var fb = document.getElementById(id + '-q' + qi + '-fb');
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+    fb.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Incorrect.';
+    document.getElementById(id + '-q' + qi + '-prog').textContent = state.score + ' correct so far';
+    document.getElementById(id + '-q' + qi + '-next').style.display = 'inline-block';
+  };
+  window.quizNext = function (id, qi, total) {
+    document.getElementById(id + '-q' + qi).classList.remove('active');
+    if (qi + 1 < total) {
+      document.getElementById(id + '-q' + (qi + 1)).classList.add('active');
+    } else {
+      var score = (__quizState[id] || {}).score || 0;
+      document.getElementById(id + '-score').style.display = 'block';
+      document.getElementById(id + '-score-val').textContent = score + ' / ' + total;
+    }
+  };
+  window.quizRestart = function (id, total) {
+    __quizState[id] = { score: 0, answered: {} };
+    document.getElementById(id + '-score').style.display = 'none';
+    for (var i = 0; i < total; i++) {
+      var q = document.getElementById(id + '-q' + i);
+      q.classList.toggle('active', i === 0);
+      q.querySelectorAll('.quiz-option').forEach(function (o) {
+        o.disabled = false;
+        o.className = 'quiz-option';
+      });
+      document.getElementById(id + '-q' + i + '-fb').className = 'quiz-feedback';
+      document.getElementById(id + '-q' + i + '-fb').textContent = '';
+      document.getElementById(id + '-q' + i + '-next').style.display = 'none';
+      document.getElementById(id + '-q' + i + '-prog').textContent = '';
+    }
+  };
+}
+</script>

@@ -59,11 +59,3 @@ etcd is a consistent and highly-available key value store used as Kubernetes' ba
       - API server act as an interface to interact with the client and others components
 3. How is ETCD crucial to Kubernetes?
    - Etcd allows clients to subscribe to changes to a particular key or set of key
-
-## Flashcards
-
-{{< flashcards >}}
-
-## Quiz
-
-{{< quiz >}}
