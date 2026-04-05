@@ -144,3 +144,39 @@ Without the extra pointer, one zone would be unreachable.
 | Query Optimization       | N/A            | Observability, Slow Query Logs        | Medium   |
 | Big Data / Dist. Systems | Ch 8-14        | Sharding, Replication, HA Clusters    | Critical |
 | Data Modelling / ER      | N/A            | Schema Migrations (CI/CD)             | Low      |
+
+## Page Header
+
+### Magic number
+
+- it is hard coded in DB source code and shared among pages with the kind (B-Tree internal pages, B-Tree leaf page, OVerflow page, ...)
+- different from checksum, it only proves page is valid not data integrity
+
+### Sibling links
+
+- links to left and right neighbor nodes
+- pros: don't have to ascend back to parent
+- cons: take more effort when split and merge
+
+### Rightmost ...
+
+a
+
+## Compaction
+
+- remove dead cells (created via not only deleting but also updating in MVCC)
+- happens parallel with queries that maintain storage integrity, reclaim space, reduce overhead, and keep pages in order
+- reduce cleanup cost during inserts, updates, and deletes
+
+|                             | **Page Rewrite (on write)**                      | **Auto Vacuum**                                    | **Manual VACUUM**          | **VACUUM FULL**                             |
+| --------------------------- | ------------------------------------------------ | -------------------------------------------------- | -------------------------- | ------------------------------------------- |
+| **Trigger**                 | Write needs contiguous space, page is fragmented | Background daemon, threshold-based (% dead tuples) | Explicit `VACUUM` command  | Explicit `VACUUM FULL` command              |
+| **Scope**                   | Single page, in-place                            | Table/index, page by page                          | Table/index, page by page  | Entire table — rewrites to new file         |
+| **Blocks writes?**          | Yes — write waits for it                         | No — runs concurrently                             | No — runs concurrently     | Yes — holds exclusive lock                  |
+| **Blocks reads?**           | No                                               | No                                                 | No                         | Yes — holds exclusive lock                  |
+| **Reclaims OS disk space?** | No                                               | No                                                 | No                         | Yes                                         |
+| **Defragments page?**       | Yes — compacts live cells                        | Yes — marks space reusable                         | Yes — marks space reusable | Yes — full rewrite                          |
+| **Updates free page list?** | Yes                                              | Yes                                                | Yes                        | Yes                                         |
+| **When to use**             | Automatic, no choice                             | Always on (default)                                | After large bulk deletes   | Table is bloated, disk space critical       |
+| **Cost**                    | Low (one page)                                   | Low (incremental)                                  | Medium                     | High (rewrites entire table, needs 2x disk) |
+| **Conceptual role**         | Emergency spot-clean                             | Regular janitor                                    | On-demand janitor          | Move to a new clean house                   |
