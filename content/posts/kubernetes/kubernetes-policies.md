@@ -6,6 +6,65 @@ description: "Learn how to stabilize multi-tenant Kubernetes clusters using Reso
 draft: false
 tags: ["kubernetes", "policy", "security", "gitops"]
 categories: ["Kubernetes"]
+flashcards:
+  - q: "What is the primary scope of a ResourceQuota?"
+    a: "Namespace level—it defines the total aggregate resources a team or project can consume."
+  - q: "What is the primary scope of a LimitRange?"
+    a: "Pod/Container level—it defines constraints and defaults for individual workloads."
+  - q: "What happens if a ResourceQuota is set but a Pod doesn't specify requests/limits?"
+    a: "Kubernetes will reject the Pod (strict mode) unless a LimitRange provides default values."
+  - q: "What is the 'Noisy Neighbor' problem in Kubernetes?"
+    a: "When one misconfigured microservice consumes excessive resources, starving others and destabilizing the node."
+  - q: "Which tool is recommended for finding optimal resource values without manual guessing?"
+    a: "Vertical Pod Autoscaler (VPA) in 'Recommendation' mode."
+  - q: "What is the recommended Prometheus percentile for setting CPU requests?"
+    a: "The 90th percentile of actual usage over a 7-day period."
+  - q: "Why should memory requests be closer to the observed maximum usage than CPU requests?"
+    a: "Because memory is not compressible; if a container exceeds its limit, it is OOMKilled rather than throttled."
+  - q: "What does the 'maxLimitRequestRatio' in a LimitRange control?"
+    a: "It prevents extreme bursting by capping the ratio between a container's limit and its request."
+  - q: "Where should ResourceQuotas be applied according to the hybrid 'Sweet Spot' strategy?"
+    a: "Apply generous quotas (150-200% of peak) in Production, but drop them in Dev/Staging to favor velocity."
+  - q: "At what percentage of quota utilization should monitoring alerts typically be set?"
+    a: "80% utilization, providing lead time for optimization or quota increases."
+quiz:
+  title: "Kubernetes Resource Policies Quiz"
+  questions:
+    - q: "Which policy acts as a 'budget' for an entire namespace?"
+      options:
+        - "LimitRange"
+        - "NetworkPolicy"
+        - "ResourceQuota"
+        - "PodSecurityPolicy"
+      correct: 2
+    - q: "How does a LimitRange improve the developer experience for 'lazy' deployments?"
+      options:
+        - "It automatically scales pods to handle load"
+        - "It injects default requests and limits if they are missing from the YAML"
+        - "It bypasses ResourceQuotas for high-priority apps"
+        - "It prevents OOMKilled errors by adding more RAM"
+      correct: 1
+    - q: "What is a major risk of using the 'Fleet Approach' (Node-level optimization only) without Quotas?"
+      options:
+        - "Developers hit 403 Forbidden errors constantly"
+        - "Cloud costs can spike drastically due to resource leaks or runaway autoscaling"
+        - "The API server becomes slow due to object bloat"
+        - "Nodes cannot be added to the cluster"
+      correct: 1
+    - q: "According to the post, what is a safe Limit-to-Request ratio for CPU?"
+      options:
+        - "1:1 (No bursting allowed)"
+        - "1.2:1 (Slight bursting)"
+        - "2:1 or 3:1 (Generous bursting)"
+        - "10:1 (Extreme bursting)"
+      correct: 2
+    - q: "In a GitOps workflow, where should ResourceQuotas be managed?"
+      options:
+        - "Manually via kubectl when a team requests them"
+        - "In the application code repository"
+        - "Alongside the Namespace definition in the central GitOps repository"
+        - "Only in the cloud provider console"
+      correct: 2
 ---
 
 Managing a multi-tenant Kubernetes cluster without resource policies is like running a hotel without a booking system: eventually, one guest will check into the penthouse and accidentally consume the entire building's electricity and water supply. 
