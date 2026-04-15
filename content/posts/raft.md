@@ -2,6 +2,61 @@
 title: 'Raft'
 date: 2026-02-14T17:52:20+07:00
 draft: true
+flashcards:
+  - q: "What are the three possible states of a node in a Raft cluster?"
+    a: "Follower, Candidate, and Leader."
+  - q: "What is a 'term' in the Raft algorithm?"
+    a: "A monotonically increasing number that acts as a logical clock, ensuring that at most one leader exists per term."
+  - q: "What event triggers a Follower to become a Candidate?"
+    a: "An election timeout, which occurs when the Follower hasn't received a heartbeat from the Leader for a randomized period."
+  - q: "What is a 'majority quorum' in Raft?"
+    a: "More than half of the nodes in the cluster (e.g., 3 out of 5), required to elect a leader or commit a log entry."
+  - q: "What is the primary role of the Leader in Raft?"
+    a: "Handling client requests, appending them to its log, and replicating those logs to all other nodes."
+  - q: "What are the three steps in the Log Replication process?"
+    a: "1. Append (Leader appends to its log), 2. Commit (Leader waits for majority acknowledgment), 3. Apply (Nodes apply the entry to their state machine)."
+  - q: "Why is the election timeout randomized in Raft?"
+    a: "To prevent 'split votes' where multiple nodes become candidates simultaneously and tie, leading to repeated failed elections."
+  - q: "What does 'Leader Completeness' guarantee?"
+    a: "That a newly elected leader for a given term contains all the log entries committed in previous terms."
+quiz:
+  title: "Raft Consensus Algorithm Quiz"
+  questions:
+    - q: "If a cluster has 5 nodes, what is the minimum number of votes a Candidate needs to become a Leader?"
+      options:
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+      correct: 1
+    - q: "What happens if two Candidates tie in an election (Split Vote)?"
+      options:
+        - "The node with the lowest ID wins"
+        - "The election restarts with a higher term after another timeout"
+        - "The cluster shuts down for safety"
+        - "A random node is chosen by the kernel"
+      correct: 1
+    - q: "When does a Leader consider a log entry to be 'committed'?"
+      options:
+        - "As soon as it receives the client request"
+        - "When it has been written to its own disk"
+        - "When it has been replicated to a majority of nodes"
+        - "When the term ends"
+      correct: 2
+    - q: "Which RPC is used by the Leader to send heartbeats and replicate data?"
+      options:
+        - "RequestVote"
+        - "AppendEntries"
+        - "InstallSnapshot"
+        - "JoinCluster"
+      correct: 1
+    - q: "A Follower node sees a RequestVote RPC with a term LOWER than its own current term. What should it do?"
+      options:
+        - "Vote for the candidate anyway"
+        - "Reject the vote"
+        - "Update its own term to match the candidate"
+        - "Forward the request to the Leader"
+      correct: 1
 ---
 
 ### Applying the 80/20 Principle to Learning Raft

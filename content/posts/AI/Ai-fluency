@@ -1,0 +1,76 @@
+The **AI Fluency Framework** applied to learning IT concepts like database scaling works by using AI (like me!) as an active learning partner across different cognitive levels, not just for quick answers.
+
+Here's how to apply it:
+
+---
+
+## The AI Fluency Framework for Learning "Database Scaling"
+
+### 1. 🔍 **Ask, Don't Just Google**
+Instead of searching for a definition, have a *conversation* with AI to build understanding progressively.
+
+**Example prompts:**
+- *"Explain database scaling like I'm a backend dev who understands SQL but never dealt with high traffic."*
+- *"What problem does database scaling actually solve?"*
+
+---
+
+### 2. 🧠 **Socratic Dialogue — Challenge the AI**
+Push back, ask follow-ups, and request analogies. This deepens retention.
+
+**Example:**
+- *"You said vertical scaling has limits — why exactly? Give me a real-world analogy."*
+- *"What's the tradeoff between read replicas and sharding?"*
+
+---
+
+### 3. 🏗️ **Build Mental Models with Visuals**
+Ask AI to diagram concepts or walk through scenarios.
+
+**Example:**
+- *"Draw a diagram of horizontal vs vertical scaling."*
+- *"Walk me through what happens step-by-step when 10,000 users hit a single database."*
+
+---
+
+### 4. 🧪 **Test Yourself Through AI**
+Use AI to quiz you and expose gaps.
+
+**Example:**
+- *"Quiz me on database scaling concepts — start easy, then increase difficulty."*
+- *"I think sharding means splitting data by rows — is that right? What am I missing?"*
+
+---
+
+### 5. 🔗 **Connect to Real-World Scenarios**
+Ground abstract concepts in systems you know.
+
+**Example:**
+- *"How does Instagram likely handle database scaling for 2 billion users?"*
+- *"If I were building a ride-sharing app, when would I need to start thinking about scaling?"*
+
+---
+
+### 6. 🛠️ **Apply & Build**
+Use AI to guide a mini project or case study.
+
+**Example:**
+- *"Help me design a scaled database architecture for an e-commerce app expecting 1M daily users."*
+- *"Review my sharding strategy and tell me what I got wrong."*
+
+---
+
+## Why This Works Better Than Just Reading Docs
+
+| Passive Learning | AI Fluency Framework |
+|---|---|
+| Read an article once | Dialogue until you truly get it |
+| Get one explanation | Get multiple analogies & angles |
+| No feedback loop | Immediate correction of misconceptions |
+| Isolated facts | Connected mental models |
+
+---
+
+**The key principle:** AI is your **thinking partner**, not a search engine. The more you engage iteratively — questioning, applying, teaching back — the deeper the learning sticks.
+
+Want me to actually *demo* this with you right now on database scaling? I can start a Socratic session.

@@ -2,6 +2,59 @@
 title: 'OSI'
 date: 2025-12-26T20:26:23+07:00
 draft: true
+flashcards:
+  - q: "What is the primary role of Layer 7 (Application) in the OSI model?"
+    a: "Providing network services directly to users and applications, including protocols like HTTP, DNS, and SSH."
+  - q: "Which OSI layer is responsible for data encryption and formatting, such as SSL/TLS?"
+    a: "Layer 6 (Presentation)."
+  - q: "What are the primary protocols associated with Layer 4 (Transport)?"
+    a: "TCP (Transmission Control Protocol) for reliable delivery and UDP (User Datagram Protocol) for fast, connectionless delivery."
+  - q: "Which layer handles packet routing and logical addressing (IP)?"
+    a: "Layer 3 (Network)."
+  - q: "What is the difference between Layer 2 (Data Link) and Layer 3 (Network)?"
+    a: "Layer 2 handles local node-to-node transfer (Ethernet, MAC addresses), while Layer 3 handles end-to-end routing across different networks (IP)."
+  - q: "At which layer do cables, connectors, and electrical signals reside?"
+    a: "Layer 1 (Physical)."
+  - q: "Which layer manages connection sessions between applications, including RPC?"
+    a: "Layer 5 (Session)."
+quiz:
+  title: "OSI Model Fundamentals Quiz"
+  questions:
+    - q: "Which layer is responsible for ensuring that data is formatted in a way that the receiving application can understand (e.g., encryption, compression)?"
+      options:
+        - "Application (Layer 7)"
+        - "Presentation (Layer 6)"
+        - "Session (Layer 5)"
+        - "Transport (Layer 4)"
+      correct: 1
+    - q: "If you are troubleshooting a 'Ping' (ICMP) failure, which OSI layer are you primarily investigating?"
+      options:
+        - "Layer 2"
+        - "Layer 3"
+        - "Layer 4"
+        - "Layer 7"
+      correct: 1
+    - q: "Which protocol provides 'reliable' end-to-end delivery at the Transport layer?"
+      options:
+        - "UDP"
+        - "IP"
+        - "TCP"
+        - "HTTP"
+      correct: 2
+    - q: "MAC addresses are used for addressing at which OSI layer?"
+      options:
+        - "Layer 1"
+        - "Layer 2"
+        - "Layer 3"
+        - "Layer 4"
+      correct: 1
+    - q: "A Load Balancer terminating SSL/TLS certificates is performing work at which OSI layer?"
+      options:
+        - "Layer 4"
+        - "Layer 5"
+        - "Layer 6"
+        - "Layer 7"
+      correct: 2
 ---
 
 | Layer | Name         | Role (Brief)                | Key Protocols/Examples (80/20 Focus) | Memorization Tip (Protocol-Focused) |
@@ -13,35 +66,3 @@ draft: true
 | 3     | Network      | Packet routing/addressing.  | "IP (addressing)                     | ICMP (ping)."                       |,"""Need"" = Need routes; ""need IP for clouds""—practice pinging in VPCs."
 | 2     | Data Link    | Local node transfer.        | "Ethernet (framing)                  | MAC addresses."                     |,"""Data"" = Data locally; ""data via Ethernet switches""—visualize VLANs in infra."
 | 1     | Physical     | Bit transmission.           | "Cables (RJ-45/fiber)                | Wi-Fi signals."                     |,"""Processing"" = Processing hardware; ""processing cables in racks""—recall physical server checks."
-
-<!-- anki
-Q: What is Layer 7 (Application) and its key protocols?
-A: Role: User/app network services. Key Protocols/Examples: HTTP/HTTPS (web traffic), DNS (domain lookup), SSH (remote access). Tip: Think curl in CI/CD for HTTPS or DNS in Terraform.
-
-Q: What is Layer 6 (Presentation) and its key protocols?
-A: Role: Data formatting/encryption. Key Protocols/Examples: SSL/TLS (secure data), MIME (attachments). Tip: Recall TLS certs in AWS ALB or MIME in email alerts.
-
-Q: What is Layer 5 (Session) and its key protocols?
-A: Role: Connection management. Key Protocols/Examples: RPC (remote procedures), SOCKS (proxies). Tip: Link to RPC in gRPC services or SOCKS for proxy setups in VPNs.
-
-Q: What is Layer 4 (Transport) and its key protocols?
-A: Role: End-to-end delivery. Key Protocols/Examples: TCP (reliable), UDP (fast), ports (e.g., 80/443). Tip: Associate with kubectl port-forward (TCP) or UDP for streaming in apps.
-
-Q: What is Layer 3 (Network) and its key protocols?
-A: Role: Packet routing/addressing. Key Protocols/Examples: IP (addressing), ICMP (ping). Tip: Practice with ip addr show or ping in cloud VPC troubleshooting.
-
-Q: What is Layer 2 (Data Link) and its key protocols?
-A: Role: Local node transfer. Key Protocols/Examples: Ethernet (framing), MAC addresses. Tip: Visualize Ethernet in switch configs or MAC in container networking.
-
-Q: What is Layer 1 (Physical) and its key protocols?
-A: Role: Bit transmission. Key Protocols/Examples: Cables (RJ-45/fiber), Wi-Fi signals. Tip: Recall checking RJ-45 ports in server racks or Wi-Fi in edge deployments.
-
-C: Layer {{c1::7}} - {{c2::Application}} handles user/app services like {{c3::HTTP/HTTPS}}, {{c4::DNS}}, and {{c5::SSH}}.
-C: Layer {{c1::6}} - {{c2::Presentation}} manages data formatting and encryption using {{c3::SSL/TLS}} and {{c4::MIME}}.
-C: Layer {{c1::5}} - {{c2::Session}} manages connections with {{c3::RPC}} and {{c4::SOCKS}}.
-C: Layer {{c1::4}} - {{c2::Transport}} provides end-to-end delivery with {{c3::TCP}} (reliable) and {{c4::UDP}} (fast).
-C: Layer {{c1::3}} - {{c2::Network}} handles routing with {{c3::IP}} and troubleshooting with {{c4::ICMP/ping}}.
-C: Layer {{c1::2}} - {{c2::Data Link}} manages local transfers with {{c3::Ethernet}} framing and {{c4::MAC}} addresses.
-C: Layer {{c1::1}} - {{c2::Physical}} transmits bits over {{c3::cables}} (RJ-45/fiber) and {{c4::Wi-Fi}} signals.
-tags: osi, networking
--->

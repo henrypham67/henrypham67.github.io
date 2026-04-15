@@ -3,6 +3,61 @@ title: 'SystemD'
 date: 2024-10-26T14:24:37+07:00
 draft: true
 tags: ["linux", "command", "systemd"]
+flashcards:
+  - q: "What command enables a systemd service to start at boot?"
+    a: "`systemctl enable <service>.service`"
+  - q: "What command prevents a service from being started (even manually)?"
+    a: "`systemctl mask <service>.service` — this creates a symlink to /dev/null"
+  - q: "What are the three main sections of a systemd unit file?"
+    a: "[Unit], [Service], [Install]"
+  - q: "Where are system-level systemd unit files stored?"
+    a: "`/lib/systemd/system/` (packaged) and `/etc/systemd/system/` (admin overrides)"
+  - q: "What command reloads all unit files after you edit one?"
+    a: "`systemctl daemon-reload`"
+  - q: "What is the difference between `systemctl restart` and `systemctl reload`?"
+    a: "`restart` stops and starts the service (new PID). `reload` sends SIGHUP to re-read config without stopping (same PID, if supported)."
+  - q: "How do you list all systemd services (including inactive)?"
+    a: "`systemctl list-units --type service --all`"
+  - q: "What signal does `systemctl reload` typically send to a process?"
+    a: "It usually sends `SIGHUP` to tell the process to re-read its configuration files."
+quiz:
+  title: "SystemD Mastery Quiz"
+  questions:
+    - q: "Which command would you use to prevent a service from being started even by another service?"
+      options:
+        - "systemctl stop"
+        - "systemctl disable"
+        - "systemctl mask"
+        - "systemctl isolate"
+      correct: 2
+    - q: "You've just edited a .service file in /etc/systemd/system/. What must you do before systemd recognizes the changes?"
+      options:
+        - "systemctl restart <service>"
+        - "systemctl daemon-reload"
+        - "systemctl reload-env"
+        - "reboot the system"
+      correct: 1
+    - q: "Which section of a systemd unit file is used to define dependencies and metadata like 'Description'?"
+      options:
+        - "[Service]"
+        - "[Install]"
+        - "[Unit]"
+        - "[Metadata]"
+      correct: 2
+    - q: "What is the key difference between 'enable' and 'start' in systemctl?"
+      options:
+        - "Enable starts it now; Start makes it persistent"
+        - "Enable makes it persistent across boots; Start starts it now"
+        - "They are aliases for the same operation"
+        - "Enable is for services; Start is for timers"
+      correct: 1
+    - q: "If you want to see all services, including those that failed or are inactive, which flag do you add to 'list-units'?"
+      options:
+        - "--verbose"
+        - "--failed"
+        - "--all"
+        - "--status"
+      correct: 2
 ---
 
 ```bash
@@ -18,7 +73,7 @@ systemctl start ssh.service
 ```
 
 ```bash
-systemctl stop ssh.servicehugo 
+systemctl stop ssh.service
 ```
 
 ```bash
@@ -29,7 +84,7 @@ systemctl reload ssh.service
 systemctl restart ssh.service
 ```
 
-prevent serice from being activated?
+prevent service from being activated?
 
 ```bash
 systemctl mask ssh.service
@@ -65,42 +120,3 @@ Sections:
 /lib/systemd/system/ssh.service
 
 learn more about permission best practices
-
-<!-- anki
-Q: What command enables a systemd service to start at boot?
-A: `systemctl enable <service>.service`
-
-Q: What command prevents a service from being started (even manually)?
-A: `systemctl mask <service>.service` — creates a symlink to /dev/null
-
-Q: What are the three main sections of a systemd unit file?
-A: [Unit], [Service], [Install]
-tags: concepts
-
-Q: Where are system-level systemd unit files stored?
-A: `/lib/systemd/system/` (packaged) and `/etc/systemd/system/` (admin overrides)
-tags: paths
-
-Q: What command reloads all unit files after you edit one?
-A: `systemctl daemon-reload`
-
-Q: What is the difference between `systemctl restart` and `systemctl reload`?
-A: `restart` stops and starts the service (new PID). `reload` sends SIGHUP to re-read config without stopping (same PID, if supported).
-tags: concepts
-
-Q: How do you list all systemd services (including inactive)?
-A: `systemctl list-units --type service --all`
-
-C: To enable a service to start at boot: `systemctl {{c1::enable}} ssh.service`
-C: To prevent a service from being started, even manually: `systemctl {{c1::mask}} ssh.service` — this creates a symlink to {{c2::/dev/null}}
-C: To reverse a mask: `systemctl {{c1::unmask}} ssh.service`
-C: To re-read config without stopping a service (same PID): `systemctl {{c1::reload}} ssh.service`
-C: To stop and start a service (new PID): `systemctl {{c1::restart}} ssh.service`
-C: The three main sections of a systemd unit file are {{c1::[Unit]}}, {{c2::[Service]}}, and {{c3::[Install]}}
-C: Two common restart-related options in a unit file are {{c1::Restart}} and {{c2::RestartSec}}
-C: System-packaged unit files are stored in {{c1::/lib/systemd/system/}}, while admin overrides go in {{c2::/etc/systemd/system/}}
-C: After editing a unit file, reload all units with `systemctl {{c1::daemon-reload}}`
-C: To list all services including inactive ones: `systemctl list-units --type service {{c1::--all}}`
-C: `systemctl reload` sends {{c1::SIGHUP}} to re-read config, while `systemctl restart` gives the service a {{c2::new PID}}
-C: To read the manual for service unit files: `man {{c1::systemd.service}}`
--->

@@ -1,7 +1,10 @@
 ---
 title: 'B-Tree'
 date: 2026-03-08T09:10:01+07:00
+slug: b-tree-internals
 draft: true
+tags: ["databases", "storage", "internals", "b-tree"]
+categories: ["Databases"]
 ---
 
 ## BST
@@ -124,6 +127,21 @@ Formula: `N ≈ (Page Size - Overhead) / (Key Size + Pointer Size)`
 
 Without the extra pointer, one zone would be unreachable.
 
+**Concrete Example:**
+Let's calculate the fan-out (N+1) for a standard PostgreSQL-like page:
+- **Page Size:** 8,192 bytes (8 KB)
+- **Header/Overhead:** ~24 bytes
+- **Key Size:** 8 bytes (bigint)
+- **Pointer Size:** 8 bytes
+- **Calculation:** `N = (8168 / 16) ≈ 510`
+- **Fan-out:** `N + 1 = 511`
+
+With a fan-out of 511:
+- **Height 2** (Root + 511 children): `511^2 ≈ 261,121` keys
+- **Height 3** (Root + Internal + Leaves): `511^3 ≈ 133,432,831` keys
+
+Even with **133 million rows**, the database only needs **3 disk seeks** to find a record. This is why B-Trees are so efficient compared to BSTs, which would require ~27 seeks (`log2(133M)`) for the same dataset.
+
 ## Summary
 
 - How B-Tree solves low fan-out and random location on disk of BST
@@ -149,8 +167,9 @@ Without the extra pointer, one zone would be unreachable.
 
 ### Magic number
 
-- it is hard coded in DB source code and shared among pages with the kind (B-Tree internal pages, B-Tree leaf page, OVerflow page, ...)
-- different from checksum, it only proves page is valid not data integrity
+- it is hard coded in DB source code and shared among pages
+- its purpose are identifying kind (B-Tree internal pages, B-Tree leaf page, OVerflow page, ...), specifying version and indicating serialization format
+- **different from checksum**, it only proves page is valid not data integrity
 
 ### Sibling links
 
@@ -158,9 +177,19 @@ Without the extra pointer, one zone would be unreachable.
 - pros: don't have to ascend back to parent
 - cons: take more effort when split and merge
 
-### Rightmost ...
+### Rightmost pointers
 
-a
+We mentioned that with N separator keys there will be N+1 ranges but also mentioned in a cell of a slotted page, there is only 1 key-value pair. That means there is an extra range which does not has it own key. And this additional range could be stored in the header
+
+### Node High Keys
+
+Add an additional keys for value that container pointer which redirect us to high keys
+
+### Overflow pages
+
+A cell has it own `max_payload_size`, however some data structure have big size (e.g. string). The prefix data will be write to the primary page and there will be a pointer to spilled data in the overflow page
+
+## 
 
 ## Compaction
 
