@@ -219,7 +219,7 @@
                 align-items: start;
             }
 
-            @media (max-width: 600px) {
+            @media (max-width: 720px) {
                 .row {
                     grid-template-columns: 1fr;
                     gap: 16px;
@@ -577,7 +577,8 @@
                 transition:
                     opacity 0.2s,
                     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-                white-space: nowrap;
+                white-space: normal;
+                max-width: calc(100vw - 32px);
             }
             .now-picking.show {
                 opacity: 1;
@@ -871,14 +872,83 @@
                 font-style: italic;
             }
 
+            /* Per-row team picker (visible when teams > 2) */
+            .team-pick-wrap {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .team-picker {
+                width: 100%;
+                padding: 5px 8px;
+                border: 1.5px solid var(--ink);
+                border-radius: 7px;
+                background: var(--accent-soft);
+                font-family: "Fraunces", serif;
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--ink);
+                cursor: pointer;
+                transition: background 0.15s;
+            }
+            .team-picker:hover { background: var(--butter); }
+            .team-picker:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
             /* Mobile: scroll horizontally rather than crush the table */
             .matchlog-scroll {
                 overflow-x: auto;
             }
-            @media (max-width: 700px) {
-                .matchlog-table {
-                    min-width: 700px;
+            @media (max-width: 720px) {
+                body { padding: 18px 14px 60px; }
+                .blob { display: none; }
+                header { margin-bottom: 32px; }
+                h1 { font-size: clamp(40px, 11vw, 56px); }
+                .subtitle { font-size: 16px; }
+                .card { padding: 22px 18px; border-radius: 20px; }
+                .card-label { left: 16px; }
+
+                .actions { gap: 10px; margin-top: 24px; }
+                .btn {
+                    flex: 1 1 calc(50% - 10px);
+                    justify-content: center;
+                    padding: 13px 16px;
+                    font-size: 16px;
+                    box-shadow: 4px 4px 0 var(--ink);
                 }
+
+                .now-picking {
+                    font-size: 22px;
+                    padding: 14px 20px;
+                    line-height: 1.15;
+                }
+
+                .penalty-line {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    align-items: stretch;
+                }
+                .penalty-line .notes-input,
+                #penaltyText {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    margin-left: 0 !important;
+                    font-size: 16px;
+                }
+
+                .notes-input,
+                .pair-select select,
+                .team-picker { font-size: 16px; }
+
+                .matchlog-table { min-width: 640px; }
+                .matchlog-table th,
+                .matchlog-table td { padding: 8px; }
+                .matchlog-toolbar { gap: 10px; }
+                .matchlog-toolbar .rounds-stepper { margin-left: 0; }
+
+                .results-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+                .results-title { font-size: 26px; }
+                .teams-grid { grid-template-columns: 1fr; gap: 14px; }
             }
 
             /* Footer */
@@ -1620,6 +1690,11 @@ Riley"
                 try {
                     try {
                         matchlogState = JSON.parse(d.json);
+                        matchlogState = matchlogState.map((e) => ({
+                            ...e,
+                            teamA: e.teamA ?? 0,
+                            teamB: e.teamB ?? 1,
+                        }));
                     } catch (e) {
                         matchlogState = [];
                     }
@@ -1803,6 +1878,27 @@ Riley"
                 }));
             }
 
+            function memberOpts(teamIdx) {
+                if (!lastTeams || !lastTeams[teamIdx]) return '<option value="">—</option>';
+                return [
+                    '<option value="">—</option>',
+                    ...lastTeams[teamIdx].map(
+                        (m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`,
+                    ),
+                ].join("");
+            }
+
+            function teamPickerOpts(selectedIdx) {
+                if (!lastTeams) return "";
+                return lastTeams
+                    .map((_, idx) => {
+                        const name = `Team ${PALETTE[idx % PALETTE.length].name}`;
+                        const sel = idx === selectedIdx ? " selected" : "";
+                        return `<option value="${idx}"${sel}>${escapeHtml(name)}</option>`;
+                    })
+                    .join("");
+            }
+
             function buildMatchLog() {
                 const teams = getTeamLabels();
                 if (!teams || teams.length < 2) {
@@ -1810,19 +1906,8 @@ Riley"
                     return;
                 }
 
-                // We log Team A (index 0) vs Team B (index 1) for badminton doubles.
-                // If there are more than 2 teams, just use the first two.
-                const teamA = teams[0];
-                const teamB = teams[1];
-
                 matchlogCard.style.display = "block";
-
-                // Update column headers with team color names
-                const headerCells = document.querySelectorAll(
-                    "#matchlogTable thead th",
-                );
-                headerCells[1].textContent = teamA.name;
-                headerCells[3].textContent = teamB.name;
+                const multiTeam = teams.length > 2;
 
                 const numRounds = Math.max(
                     1,
@@ -1832,6 +1917,8 @@ Riley"
                 // Trim or extend persistent state to match round count
                 while (matchlogState.length < numRounds) {
                     matchlogState.push({
+                        teamA: 0,
+                        teamB: 1,
                         a1: "",
                         a2: "",
                         b1: "",
@@ -1845,34 +1932,23 @@ Riley"
                     matchlogState = matchlogState.slice(0, numRounds);
                 }
 
-                // Build option lists (with empty default)
-                const optsA = [
-                    '<option value="">—</option>',
-                    ...teamA.members.map(
-                        (m) =>
-                            `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`,
-                    ),
-                ].join("");
-                const optsB = [
-                    '<option value="">—</option>',
-                    ...teamB.members.map(
-                        (m) =>
-                            `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`,
-                    ),
-                ].join("");
-
                 matchlogBody.innerHTML = "";
                 for (let i = 0; i < numRounds; i++) {
                     const s = matchlogState[i];
+                    const tAIdx = s.teamA ?? 0;
+                    const tBIdx = s.teamB ?? 1;
                     const tr = document.createElement("tr");
                     tr.dataset.round = i;
                     tr.innerHTML = `
         <td class="col-round round-num">${i + 1}</td>
         <td class="col-team-a">
-          <div class="pair-select">
-            <select data-field="a1">${optsA}</select>
-            <span class="vs">+</span>
-            <select data-field="a2">${optsA}</select>
+          <div class="${multiTeam ? "team-pick-wrap" : ""}">
+            ${multiTeam ? `<select data-field="teamA" class="team-picker">${teamPickerOpts(tAIdx)}</select>` : ""}
+            <div class="pair-select">
+              <select data-field="a1">${memberOpts(tAIdx)}</select>
+              <span class="vs">+</span>
+              <select data-field="a2">${memberOpts(tAIdx)}</select>
+            </div>
           </div>
         </td>
         <td class="col-score">
@@ -1883,10 +1959,13 @@ Riley"
           </div>
         </td>
         <td class="col-team-b">
-          <div class="pair-select">
-            <select data-field="b1">${optsB}</select>
-            <span class="vs">+</span>
-            <select data-field="b2">${optsB}</select>
+          <div class="${multiTeam ? "team-pick-wrap" : ""}">
+            ${multiTeam ? `<select data-field="teamB" class="team-picker">${teamPickerOpts(tBIdx)}</select>` : ""}
+            <div class="pair-select">
+              <select data-field="b1">${memberOpts(tBIdx)}</select>
+              <span class="vs">+</span>
+              <select data-field="b2">${memberOpts(tBIdx)}</select>
+            </div>
           </div>
         </td>
         <td class="col-notes">
@@ -1955,10 +2034,15 @@ Riley"
                 if (totalBEl) totalBEl.textContent = totalB;
                 if (winnerCell) {
                     const teams = getTeamLabels();
-                    if (totalA > totalB && teams) {
-                        winnerCell.innerHTML = `🏆 <strong>${escapeHtml(teams[0].name)}</strong> leads`;
-                    } else if (totalB > totalA && teams) {
-                        winnerCell.innerHTML = `🏆 <strong>${escapeHtml(teams[1].name)}</strong> leads`;
+                    const twoTeams = teams && teams.length === 2;
+                    if (totalA > totalB) {
+                        winnerCell.innerHTML = twoTeams
+                            ? `🏆 <strong>${escapeHtml(teams[0].name)}</strong> leads`
+                            : "🏆 Side A leads";
+                    } else if (totalB > totalA) {
+                        winnerCell.innerHTML = twoTeams
+                            ? `🏆 <strong>${escapeHtml(teams[1].name)}</strong> leads`
+                            : "🏆 Side B leads";
                     } else if (totalA > 0 && totalA === totalB) {
                         winnerCell.textContent = "🤝 Tied";
                     } else {
@@ -1985,7 +2069,24 @@ Riley"
                 const round = parseInt(tr.dataset.round, 10);
                 const field = e.target.dataset.field;
                 if (field == null || isNaN(round)) return;
-                matchlogState[round][field] = e.target.value;
+
+                if (field === "teamA" || field === "teamB") {
+                    const newIdx = parseInt(e.target.value, 10);
+                    matchlogState[round][field] = newIdx;
+                    if (field === "teamA") {
+                        matchlogState[round].a1 = "";
+                        matchlogState[round].a2 = "";
+                        tr.querySelector('[data-field="a1"]').innerHTML = memberOpts(newIdx);
+                        tr.querySelector('[data-field="a2"]').innerHTML = memberOpts(newIdx);
+                    } else {
+                        matchlogState[round].b1 = "";
+                        matchlogState[round].b2 = "";
+                        tr.querySelector('[data-field="b1"]').innerHTML = memberOpts(newIdx);
+                        tr.querySelector('[data-field="b2"]').innerHTML = memberOpts(newIdx);
+                    }
+                } else {
+                    matchlogState[round][field] = e.target.value;
+                }
                 pushMatchlog();
             });
 
@@ -2015,7 +2116,9 @@ Riley"
 
             // Reset scores button (keeps team rosters & rounds; clears pairings/scores/notes)
             resetMatchlogBtn.addEventListener("click", () => {
-                matchlogState = matchlogState.map(() => ({
+                matchlogState = matchlogState.map((s) => ({
+                    teamA: s.teamA ?? 0,
+                    teamB: s.teamB ?? 1,
                     a1: "",
                     a2: "",
                     b1: "",
@@ -2035,17 +2138,15 @@ Riley"
                 if (!teams) return;
                 const lines = [];
                 lines.push(
-                    [
-                        "Round",
-                        teams[0].name,
-                        "Score",
-                        teams[1].name,
-                        "Notes",
-                    ].join("\t"),
+                    ["Round", "Team A", "Score", "Team B", "Notes"].join("\t"),
                 );
                 matchlogState.forEach((r, i) => {
-                    const teamAPair = [r.a1, r.a2].filter(Boolean).join(" + ");
-                    const teamBPair = [r.b1, r.b2].filter(Boolean).join(" + ");
+                    const tAName = PALETTE[(r.teamA ?? 0) % PALETTE.length].name;
+                    const tBName = PALETTE[(r.teamB ?? 1) % PALETTE.length].name;
+                    const rawPairA = [r.a1, r.a2].filter(Boolean).join(" + ");
+                    const rawPairB = [r.b1, r.b2].filter(Boolean).join(" + ");
+                    const teamAPair = rawPairA ? `${tAName}: ${rawPairA}` : "";
+                    const teamBPair = rawPairB ? `${tBName}: ${rawPairB}` : "";
                     const score =
                         r.scoreA !== "" && r.scoreB !== ""
                             ? `${r.scoreA}-${r.scoreB}`
