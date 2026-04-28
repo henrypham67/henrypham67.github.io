@@ -505,6 +505,22 @@
                 letter-spacing: -0.01em;
             }
 
+            .team-name[contenteditable] {
+                cursor: text;
+                outline: none;
+                border-radius: 6px;
+                padding: 1px 6px;
+                margin: -1px -6px;
+                transition: background 0.15s;
+            }
+            .team-name[contenteditable]:hover {
+                background: var(--butter);
+            }
+            .team-name[contenteditable]:focus {
+                background: var(--accent-soft);
+                box-shadow: 0 0 0 2px var(--accent);
+            }
+
             .team-count {
                 margin-left: auto;
                 font-family: "JetBrains Mono", monospace;
@@ -726,6 +742,18 @@
                 text-align: center;
             }
             .matchlog-table .col-notes {
+                width: auto;
+            }
+
+            /* Notes feature flag — hidden by default */
+            #matchlogCard.notes-hidden .col-notes {
+                display: none;
+            }
+            #matchlogCard.notes-hidden .round-card-notes {
+                display: none;
+            }
+            #matchlogCard.notes-hidden .col-team-a,
+            #matchlogCard.notes-hidden .col-team-b {
                 width: auto;
             }
 
@@ -1220,7 +1248,35 @@
                 background: var(--accent);
             }
 
+            /* Language toggle */
+            .lang-toggle {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: var(--paper);
+                border: 2px solid var(--ink);
+                border-radius: 999px;
+                padding: 6px 14px;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                letter-spacing: 0.05em;
+                box-shadow: var(--shadow-sm);
+                transition: all 0.15s;
+            }
+            .lang-toggle:hover {
+                background: var(--lime);
+                transform: translate(-1px, -1px);
+                box-shadow: 4px 4px 0 var(--ink);
+            }
+
             /* Viewer mode lockdown */
+            body.is-viewer .team-name[contenteditable] {
+                pointer-events: none;
+                cursor: default;
+            }
+
             body.is-viewer .viewer-hide {
                 display: none !important;
             }
@@ -1255,9 +1311,10 @@
             <div class="blob blob-2"></div>
 
             <header>
-                <span class="eyebrow">★ Fair & random ★</span>
+                <button id="langToggle" class="lang-toggle" aria-label="Switch language" data-i18n="langToggle">VI</button>
+                <span class="eyebrow" data-i18n="eyebrow">★ Fair &amp; random ★</span>
                 <h1>Squad <span class="accent">Shuffle</span></h1>
-                <p class="subtitle">
+                <p class="subtitle" data-i18n="subtitle">
                     Drop in your people, pick how many teams, and let the dice
                     do the rest.
                 </p>
@@ -1269,11 +1326,11 @@
 
             <!-- INPUT CARD -->
             <div class="card">
-                <span class="card-label">01 — Setup</span>
+                <span class="card-label" data-i18n="cardSetup">01 — Setup</span>
 
                 <div class="row">
                     <div class="field" style="margin-bottom: 0">
-                        <label for="teamCount">Number of teams</label>
+                        <label for="teamCount" data-i18n="labelTeamCount">Number of teams</label>
                         <div class="stepper">
                             <button
                                 type="button"
@@ -1302,7 +1359,7 @@
                     </div>
 
                     <div class="field" id="namesField" style="margin-bottom: 0">
-                        <label for="names">Member names</label>
+                        <label for="names" data-i18n="labelNames">Member names</label>
                         <textarea
                             id="names"
                             placeholder="Type one name per line, or paste a comma-separated list…
@@ -1322,7 +1379,7 @@ Riley"
                 </div>
 
                 <div class="field" style="margin-top: 28px; margin-bottom: 0">
-                    <label>Splitting style</label>
+                    <label data-i18n="labelSplitStyle">Splitting style</label>
                     <div class="options">
                         <label class="chip active" data-mode="random">
                             <input
@@ -1331,7 +1388,7 @@ Riley"
                                 value="random"
                                 checked
                             />
-                            <span>🎲 Random</span>
+                            <span data-i18n="modeRandom">🎲 Random</span>
                         </label>
                         <label class="chip" data-mode="byLevel">
                             <input
@@ -1339,7 +1396,7 @@ Riley"
                                 name="mode"
                                 value="byLevel"
                             />
-                            <span>⚖️ By level</span>
+                            <span data-i18n="modeByLevel">⚖️ By level</span>
                         </label>
                         <label class="chip" data-mode="manual">
                             <input
@@ -1347,14 +1404,14 @@ Riley"
                                 name="mode"
                                 value="manual"
                             />
-                            <span>✋ Manual</span>
+                            <span data-i18n="modeManual">✋ Manual</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="actions">
                     <button class="btn btn-primary viewer-hide" id="splitBtn">
-                        <span>Split them up</span>
+                        <span data-i18n="btnSplit">Split them up</span>
                         <span>→</span>
                     </button>
                     <button
@@ -1362,20 +1419,20 @@ Riley"
                         id="shareLiveBtn"
                     >
                         <span>📡</span>
-                        <span>Share live</span>
+                        <span data-i18n="btnShareLive">Share live</span>
                     </button>
                     <button class="btn btn-secondary viewer-hide" id="clearBtn">
                         <span>✕</span>
-                        <span>Clear</span>
+                        <span data-i18n="btnClear">Clear</span>
                     </button>
                 </div>
             </div>
 
             <!-- RESULTS CARD -->
             <div class="card" id="resultsCard" style="display: none">
-                <span class="card-label">02 — Teams</span>
+                <span class="card-label" data-i18n="cardTeams">02 — Teams</span>
                 <div class="results-header">
-                    <div class="results-title">Your <em>squads</em></div>
+                    <div class="results-title" data-i18n-html="resultsTitle">Your <em>squads</em></div>
                     <div class="meta" id="resultsMeta"></div>
                 </div>
                 <div id="results"></div>
@@ -1383,21 +1440,21 @@ Riley"
 
             <!-- MATCH LOG CARD -->
             <div class="card" id="matchlogCard" style="display: none">
-                <span class="card-label">03 — Match log</span>
+                <span class="card-label" data-i18n="cardMatchlog">03 — Match log</span>
                 <div class="results-header">
-                    <div class="results-title">Game <em>scoresheet</em></div>
-                    <div class="meta">
+                    <div class="results-title" data-i18n-html="matchlogTitle">Game <em>scoresheet</em></div>
+                    <div class="meta" data-i18n-html="matchlogMeta">
                         Doubles · Pick pairs &amp; record scores
                     </div>
                 </div>
 
                 <div class="matchlog-toolbar">
-                    <p class="hint" style="margin: 0">
+                    <p class="hint" style="margin: 0" data-i18n="matchlogHint">
                         Each round is a doubles match. Pick 2 players from each
                         team.
                     </p>
                     <div class="rounds-stepper">
-                        <label for="roundCount">Rounds</label>
+                        <label for="roundCount" data-i18n="labelRounds">Rounds</label>
                         <div class="stepper">
                             <button
                                 type="button"
@@ -1434,11 +1491,11 @@ Riley"
                     <table class="matchlog-table" id="matchlogTable">
                         <thead>
                             <tr>
-                                <th class="col-round">Round</th>
-                                <th class="col-team-a">Team A</th>
-                                <th class="col-score">Score</th>
-                                <th class="col-team-b">Team B</th>
-                                <th class="col-notes">Notes</th>
+                                <th class="col-round" data-i18n="colRound">Round</th>
+                                <th class="col-team-a" data-i18n="colTeamA">Team A</th>
+                                <th class="col-score" data-i18n="colScore">Score</th>
+                                <th class="col-team-b" data-i18n="colTeamB">Team B</th>
+                                <th class="col-notes" data-i18n="colNotes">Notes</th>
                             </tr>
                         </thead>
                         <tbody id="matchlogBody"></tbody>
@@ -1447,7 +1504,7 @@ Riley"
                 </div>
 
                 <div class="penalty-line">
-                    🖌️ <strong>Loser's penalty:</strong>
+                    🖌️ <strong data-i18n="penaltyLabel">Loser's penalty:</strong>
                     <input
                         type="text"
                         class="notes-input"
@@ -1459,14 +1516,18 @@ Riley"
                 <div class="actions" style="margin-top: 24px">
                     <button class="btn btn-secondary" id="copyMatchlogBtn">
                         <span>⎘</span>
-                        <span>Copy scoresheet</span>
+                        <span data-i18n="btnCopyScoresheet">Copy scoresheet</span>
+                    </button>
+                    <button class="btn btn-secondary" id="toggleNotesBtn">
+                        <span>📝</span>
+                        <span data-i18n="btnShowNotes">Show notes</span>
                     </button>
                     <button
                         class="btn btn-secondary viewer-hide"
                         id="resetMatchlogBtn"
                     >
                         <span>↻</span>
-                        <span>Reset scores</span>
+                        <span data-i18n="btnResetScores">Reset scores</span>
                     </button>
                 </div>
             </div>
@@ -1474,14 +1535,14 @@ Riley"
             <footer>
                 Made with <span>♥</span> &nbsp;·&nbsp; Pure HTML, CSS &amp; JS
                 &nbsp;·&nbsp;
-                <span id="footerNote">No data leaves your browser</span>
+                <span id="footerNote" data-i18n="footerNote">No data leaves your browser</span>
             </footer>
         </div>
 
         <!-- Sticky primary CTA — appears on mobile when splitBtn scrolls off screen -->
         <div class="sticky-bar viewer-hide" id="stickyBar">
             <button class="btn btn-primary" id="stickyBtn">
-                <span>Split them up</span>
+                <span data-i18n="btnSplit">Split them up</span>
                 <span>→</span>
             </button>
         </div>
@@ -1530,19 +1591,210 @@ const resultsEl = document.getElementById("results");
             let syncUnsub = [];
 
             const PALETTE = [
-                { bg: "#ffe27a", name: "Butter" },
-                { bg: "#a8d8ff", name: "Sky" },
-                { bg: "#ffb3d1", name: "Pink" },
-                { bg: "#d4ff3c", name: "Lime" },
-                { bg: "#ffc99a", name: "Peach" },
-                { bg: "#d9c7ff", name: "Lavender" },
-                { bg: "#b8e8d0", name: "Mint" },
-                { bg: "#ff9a8b", name: "Coral" },
-                { bg: "#ffd6a5", name: "Apricot" },
-                { bg: "#caffbf", name: "Pistachio" },
-                { bg: "#bdb2ff", name: "Lilac" },
-                { bg: "#9bf6ff", name: "Aqua" },
+                { bg: "#ffe27a", name: "Butter",    nameVi: "Vàng Bơ" },
+                { bg: "#a8d8ff", name: "Sky",       nameVi: "Xanh Trời" },
+                { bg: "#ffb3d1", name: "Pink",      nameVi: "Hồng" },
+                { bg: "#d4ff3c", name: "Lime",      nameVi: "Xanh Chanh" },
+                { bg: "#ffc99a", name: "Peach",     nameVi: "Đào" },
+                { bg: "#d9c7ff", name: "Lavender",  nameVi: "Oải Hương" },
+                { bg: "#b8e8d0", name: "Mint",      nameVi: "Bạc Hà" },
+                { bg: "#ff9a8b", name: "Coral",     nameVi: "San Hô" },
+                { bg: "#ffd6a5", name: "Apricot",   nameVi: "Mơ" },
+                { bg: "#caffbf", name: "Pistachio", nameVi: "Dẻ Cười" },
+                { bg: "#bdb2ff", name: "Lilac",     nameVi: "Tím Nhạt" },
+                { bg: "#9bf6ff", name: "Aqua",      nameVi: "Ngọc Lam" },
             ];
+
+            // ── i18n ──────────────────────────────────────────────────────────────────
+            const TRANSLATIONS = {
+                en: {
+                    langToggle: "VI",
+                    eyebrow: "★ Fair & random ★",
+                    subtitle: "Drop in your people, pick how many teams, and let the dice do the rest.",
+                    cardSetup: "01 — Setup",
+                    labelTeamCount: "Number of teams",
+                    labelNames: "Member names",
+                    namesPlaceholder: "Type one name per line, or paste a comma-separated list…\ne.g.\nAlex\nJordan\nSam\nRiley",
+                    namesPlaceholderByLevel: "One name per line, with a level number (any scale, e.g. 1–10):\ne.g.\nAlex 5\nJordan 3\nSam 4\nRiley 2",
+                    labelSplitStyle: "Splitting style",
+                    modeRandom: "🎲 Random",
+                    modeByLevel: "⚖️ By level",
+                    modeManual: "✋ Manual",
+                    btnSplit: "Split them up",
+                    btnShareLive: "Share live",
+                    btnClear: "Clear",
+                    cardTeams: "02 — Teams",
+                    resultsTitle: "Your <em>squads</em>",
+                    cardMatchlog: "03 — Match log",
+                    matchlogTitle: "Game <em>scoresheet</em>",
+                    matchlogMeta: "Doubles · Pick pairs &amp; record scores",
+                    matchlogHint: "Each round is a doubles match. Pick 2 players from each team.",
+                    labelRounds: "Rounds",
+                    colRound: "Round",
+                    colTeamA: "Team A",
+                    colScore: "Score",
+                    colTeamB: "Team B",
+                    colNotes: "Notes",
+                    penaltyLabel: "Loser's penalty:",
+                    penaltyDefault: "The losing team gets their face painted black.",
+                    btnCopyScoresheet: "Copy scoresheet",
+                    btnResetScores: "Reset scores",
+                    footerNote: "No data leaves your browser",
+                    footerNoteLive: "Live mode · data shared with your link recipients",
+                    namesSingular: "name",
+                    namesPlural: "names",
+                    namesEntered: "{0} {1} entered",
+                    missingLevel: " · {0} missing level (default 3)",
+                    teamSingular: "team",
+                    teamsPlural: "teams",
+                    manualCount: "{0} {1} across {2} {3}",
+                    toastAddName: "Add at least one name",
+                    toastTeamMin: "Teams must be at least 1",
+                    personSingular: "person",
+                    peoplePlural: "people",
+                    toastNotEnough: "Only {0} {1} — can't make {2} teams",
+                    toastEmptyTeam: "Team {0} has no members",
+                    toastCleared: "Cleared",
+                    toastScoresheetReset: "Scoresheet reset",
+                    toastCopied: "Scoresheet copied ✓",
+                    toastCopyFailed: "Copy failed",
+                    toastShareCopied: "Viewer link copied — share it! 📡",
+                    teamPrefix: "Team",
+                    manualPlaceholder: "One name per line…",
+                    nowPickingLabel: "→ {0}",
+                    leads: "leads",
+                    tied: "🤝 Tied",
+                    sideALeads: "🏆 Side A leads",
+                    sideBLeads: "🏆 Side B leads",
+                    pillHosting: "Hosting · {0} viewer{1}",
+                    pillViewing: "Viewing (read-only) · {0} other{1}",
+                    s: "s",
+                    tsvRound: "Round", tsvTeamA: "Team A", tsvScore: "Score", tsvTeamB: "Team B", tsvNotes: "Notes",
+                    modeLabels: { random: "random", manual: "manual", byLevel: "by level" },
+                    notesPlaceholder: "e.g. great rally",
+                    totalsLabel: "Totals",
+                    btnShowNotes: "Show notes",
+                    btnHideNotes: "Hide notes",
+                },
+                vi: {
+                    langToggle: "EN",
+                    eyebrow: "★ Công bằng & ngẫu nhiên ★",
+                    subtitle: "Nhập danh sách, chọn số đội, và để số phận quyết định.",
+                    cardSetup: "01 — Cài đặt",
+                    labelTeamCount: "Số lượng đội",
+                    labelNames: "Tên thành viên",
+                    namesPlaceholder: "Mỗi dòng một tên, hoặc dán danh sách cách nhau bằng dấu phẩy…\nVí dụ:\nAn\nBình\nCường\nDung",
+                    namesPlaceholderByLevel: "Mỗi dòng một tên kèm số cấp độ (ví dụ: 1–10):\nVí dụ:\nAn 5\nBình 3\nCường 4\nDung 2",
+                    labelSplitStyle: "Kiểu chia đội",
+                    modeRandom: "🎲 Ngẫu nhiên",
+                    modeByLevel: "⚖️ Theo cấp độ",
+                    modeManual: "✋ Thủ công",
+                    btnSplit: "Chia đội",
+                    btnShareLive: "Chia sẻ trực tiếp",
+                    btnClear: "Xóa",
+                    cardTeams: "02 — Đội",
+                    resultsTitle: "Danh sách <em>đội</em>",
+                    cardMatchlog: "03 — Bảng điểm",
+                    matchlogTitle: "Bảng <em>điểm</em> trận đấu",
+                    matchlogMeta: "Đôi · Chọn cặp &amp; ghi điểm",
+                    matchlogHint: "Mỗi hiệp là một trận đôi. Chọn 2 người từ mỗi đội.",
+                    labelRounds: "Số hiệp",
+                    colRound: "Hiệp",
+                    colTeamA: "Đội A",
+                    colScore: "Điểm",
+                    colTeamB: "Đội B",
+                    colNotes: "Ghi chú",
+                    penaltyLabel: "Hình phạt đội thua:",
+                    penaltyDefault: "Đội thua sẽ bị vẽ mặt.",
+                    btnCopyScoresheet: "Sao chép bảng điểm",
+                    btnResetScores: "Đặt lại điểm",
+                    footerNote: "Dữ liệu không rời khỏi trình duyệt",
+                    footerNoteLive: "Trực tiếp · dữ liệu được chia sẻ với người nhận link",
+                    namesSingular: "tên",
+                    namesPlural: "tên",
+                    namesEntered: "Đã nhập {0} {1}",
+                    missingLevel: " · {0} thiếu cấp độ (mặc định 3)",
+                    teamSingular: "đội",
+                    teamsPlural: "đội",
+                    manualCount: "{0} {1} trong {2} {3}",
+                    toastAddName: "Thêm ít nhất một tên",
+                    toastTeamMin: "Số đội phải ít nhất là 1",
+                    personSingular: "người",
+                    peoplePlural: "người",
+                    toastNotEnough: "Chỉ có {0} {1} — không thể tạo {2} đội",
+                    toastEmptyTeam: "Đội {0} chưa có thành viên",
+                    toastCleared: "Đã xóa",
+                    toastScoresheetReset: "Đã đặt lại bảng điểm",
+                    toastCopied: "Đã sao chép bảng điểm ✓",
+                    toastCopyFailed: "Sao chép thất bại",
+                    toastShareCopied: "Đã sao chép link xem — chia sẻ ngay! 📡",
+                    teamPrefix: "Đội",
+                    manualPlaceholder: "Mỗi dòng một tên…",
+                    nowPickingLabel: "→ {0}",
+                    leads: "dẫn trước",
+                    tied: "🤝 Hòa",
+                    sideALeads: "🏆 Bên A dẫn trước",
+                    sideBLeads: "🏆 Bên B dẫn trước",
+                    pillHosting: "Đang chiếu · {0} người xem",
+                    pillViewing: "Đang xem (chỉ đọc) · {0} người khác",
+                    s: "",
+                    tsvRound: "Hiệp", tsvTeamA: "Đội A", tsvScore: "Điểm", tsvTeamB: "Đội B", tsvNotes: "Ghi chú",
+                    modeLabels: { random: "ngẫu nhiên", manual: "thủ công", byLevel: "theo cấp độ" },
+                    notesPlaceholder: "vd. pha bóng hay",
+                    totalsLabel: "Tổng",
+                    btnShowNotes: "Hiện ghi chú",
+                    btnHideNotes: "Ẩn ghi chú",
+                },
+            };
+
+            let currentLang = localStorage.getItem("squadShuffleLang") || "en";
+
+            function t(key, ...args) {
+                let str = (TRANSLATIONS[currentLang] || TRANSLATIONS.en)[key] ?? key;
+                args.forEach((a, i) => { str = String(str).replaceAll(`{${i}}`, a); });
+                return str;
+            }
+
+            function paletteName(color) {
+                return currentLang === "vi" ? color.nameVi : color.name;
+            }
+
+            function applyLang() {
+                document.querySelectorAll("[data-i18n]").forEach((el) => {
+                    el.textContent = t(el.dataset.i18n);
+                });
+                document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+                    el.innerHTML = t(el.dataset.i18nHtml);
+                });
+                // Mode-aware placeholder for the names textarea
+                const _namesEl = document.getElementById("names");
+                if (_namesEl) {
+                    const mode = document.querySelector('input[name="mode"]:checked')?.value || "random";
+                    _namesEl.placeholder = mode === "byLevel" ? t("namesPlaceholderByLevel") : t("namesPlaceholder");
+                }
+                // Penalty default text
+                const pt = document.getElementById("penaltyText");
+                if (pt) {
+                    const enDef = TRANSLATIONS.en.penaltyDefault;
+                    const viDef = TRANSLATIONS.vi.penaltyDefault;
+                    if (pt.value === enDef || pt.value === viDef) pt.value = t("penaltyDefault");
+                }
+                updateCount();
+            }
+
+            function setLang(lang) {
+                currentLang = lang;
+                localStorage.setItem("squadShuffleLang", lang);
+                document.documentElement.lang = lang;
+                applyLang();
+                if (lastTeams) {
+                    const seq = lastSequence || lastTeams.flatMap((members, teamIdx) =>
+                        members.map((name) => ({ name, teamIdx }))
+                    );
+                    renderTeams({ teams: lastTeams, sequence: seq }, { fastForward: true });
+                    buildMatchLog();
+                }
+            }
 
             // --- Helpers ---
             function parseNames(text) {
@@ -1589,19 +1841,21 @@ const resultsEl = document.getElementById("results");
                     let total = 0;
                     textareas.forEach((ta) => (total += parseNames(ta.value).length));
                     const el = document.getElementById("manualCountHint");
-                    if (el) el.textContent = `${total} ${total === 1 ? "name" : "names"} across ${textareas.length} team${textareas.length !== 1 ? "s" : ""}`;
+                    if (el) el.textContent = t("manualCount",
+                        total, total === 1 ? t("namesSingular") : t("namesPlural"),
+                        textareas.length, textareas.length === 1 ? t("teamSingular") : t("teamsPlural"));
                     return;
                 }
                 if (mode === "byLevel") {
                     const items = parseNamedLevels(namesEl.value);
                     const withLvl = items.filter((i) => i.level != null).length;
                     const missing = items.length - withLvl;
-                    const suffix = missing > 0 ? ` · ${missing} missing level (default 3)` : "";
-                    countHint.textContent = `${items.length} ${items.length === 1 ? "name" : "names"}${suffix}`;
+                    const suffix = missing > 0 ? t("missingLevel", missing) : "";
+                    countHint.textContent = `${items.length} ${items.length === 1 ? t("namesSingular") : t("namesPlural")}${suffix}`;
                     return;
                 }
                 const names = parseNames(namesEl.value);
-                countHint.textContent = `${names.length} ${names.length === 1 ? "name" : "names"} entered`;
+                countHint.textContent = t("namesEntered", names.length, names.length === 1 ? t("namesSingular") : t("namesPlural"));
             }
 
             function renderManualInputs() {
@@ -1618,10 +1872,10 @@ const resultsEl = document.getElementById("results");
                     wrapper.className = "field";
                     wrapper.style.marginBottom = "0";
                     const lbl = document.createElement("label");
-                    lbl.innerHTML = `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${color.bg};border:1.5px solid var(--ink);vertical-align:middle;margin-right:6px;"></span>Team ${escapeHtml(color.name)}`;
+                    lbl.innerHTML = `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${color.bg};border:1.5px solid var(--ink);vertical-align:middle;margin-right:6px;"></span>${escapeHtml(t("teamPrefix"))} ${escapeHtml(paletteName(color))}`;
                     const ta = document.createElement("textarea");
                     ta.dataset.team = i;
-                    ta.placeholder = "One name per line…";
+                    ta.placeholder = t("manualPlaceholder");
                     ta.style.minHeight = "120px";
                     ta.value = prev[i] !== undefined ? prev[i] : "";
                     wrapper.appendChild(lbl);
@@ -1630,11 +1884,6 @@ const resultsEl = document.getElementById("results");
                 }
                 updateCount();
             }
-
-            const NAMES_PLACEHOLDER_DEFAULT =
-                "Type one name per line, or paste a comma-separated list…\ne.g.\nAlex\nJordan\nSam\nRiley";
-            const NAMES_PLACEHOLDER_BY_LEVEL =
-                "One name per line, with a level number (any scale, e.g. 1–10):\ne.g.\nAlex 5\nJordan 3\nSam 4\nRiley 2";
 
             function setModeUI(mode) {
                 const namesField = document.getElementById("namesField");
@@ -1646,10 +1895,9 @@ const resultsEl = document.getElementById("results");
                 } else {
                     if (namesField) namesField.style.display = "";
                     if (manualEl) manualEl.style.display = "none";
-                    namesEl.placeholder =
-                        mode === "byLevel"
-                            ? NAMES_PLACEHOLDER_BY_LEVEL
-                            : NAMES_PLACEHOLDER_DEFAULT;
+                    namesEl.placeholder = mode === "byLevel"
+                        ? t("namesPlaceholderByLevel")
+                        : t("namesPlaceholder");
                     updateCount();
                 }
             }
@@ -1700,11 +1948,11 @@ const resultsEl = document.getElementById("results");
                         if (members.length === 0 && firstEmpty === -1) firstEmpty = idx + 1;
                     });
                     if (result.flat().length === 0) {
-                        showToast("Add at least one name", "error");
+                        showToast(t("toastAddName"), "error");
                         return null;
                     }
                     if (firstEmpty !== -1) {
-                        showToast(`Team ${firstEmpty} has no members`, "error");
+                        showToast(t("toastEmptyTeam", firstEmpty), "error");
                         return null;
                     }
                     // Interleave names across teams for a dynamic reveal animation
@@ -1722,19 +1970,16 @@ const resultsEl = document.getElementById("results");
                     const items = parseNamedLevels(namesEl.value);
                     const numTeams = parseInt(teamCountEl.value, 10);
                     if (!items.length) {
-                        showToast("Add at least one name", "error");
+                        showToast(t("toastAddName"), "error");
                         namesEl.focus();
                         return null;
                     }
                     if (!numTeams || numTeams < 1) {
-                        showToast("Teams must be at least 1", "error");
+                        showToast(t("toastTeamMin"), "error");
                         return null;
                     }
                     if (numTeams > items.length) {
-                        showToast(
-                            `Only ${items.length} ${items.length === 1 ? "person" : "people"} — can't make ${numTeams} teams`,
-                            "error",
-                        );
+                        showToast(t("toastNotEnough", items.length, items.length === 1 ? t("personSingular") : t("peoplePlural"), numTeams), "error");
                         return null;
                     }
                     // Default missing levels to 3, jitter ties for randomness, sort desc
@@ -1770,19 +2015,16 @@ const resultsEl = document.getElementById("results");
                 const numTeams = parseInt(teamCountEl.value, 10);
 
                 if (!names.length) {
-                    showToast("Add at least one name", "error");
+                    showToast(t("toastAddName"), "error");
                     namesEl.focus();
                     return null;
                 }
                 if (!numTeams || numTeams < 1) {
-                    showToast("Teams must be at least 1", "error");
+                    showToast(t("toastTeamMin"), "error");
                     return null;
                 }
                 if (numTeams > names.length) {
-                    showToast(
-                        `Only ${names.length} ${names.length === 1 ? "person" : "people"} — can't make ${numTeams} teams`,
-                        "error",
-                    );
+                    showToast(t("toastNotEnough", names.length, names.length === 1 ? t("personSingular") : t("peoplePlural"), numTeams), "error");
                     return null;
                 }
 
@@ -1818,8 +2060,8 @@ const resultsEl = document.getElementById("results");
                 resultsEl.innerHTML = "";
                 nowPicking.classList.remove("show");
                 const total = teams.reduce((s, t) => s + t.length, 0);
-                const modeLabels = { random: "random", manual: "manual", byLevel: "by level" };
-                resultsMeta.textContent = `${total} people · ${teams.length} ${teams.length === 1 ? "team" : "teams"} · ${modeLabels[getMode()] || getMode()}`;
+                const modeLabels = (TRANSLATIONS[currentLang] || TRANSLATIONS.en).modeLabels;
+                resultsMeta.textContent = `${total} ${t("peoplePlural")} · ${teams.length} ${teams.length === 1 ? t("teamSingular") : t("teamsPlural")} · ${modeLabels[getMode()] || getMode()}`;
 
                 // When the splitter passes per-pick levels, compute per-team totals
                 // so we can show a Σ badge and tag each member with their level.
@@ -1852,7 +2094,7 @@ const resultsEl = document.getElementById("results");
         <div class="team-color-strip" style="background:${color.bg}"></div>
         <div class="team-header">
           <span class="team-num">T${String(idx + 1).padStart(2, "0")}</span>
-          <span class="team-name">Team ${color.name}</span>
+          <span class="team-name" contenteditable="true" data-team-idx="${idx}" spellcheck="false" title="Click to rename">${escapeHtml(getTeamName(idx))}</span>
           ${totalBadge}
           <span class="team-count" data-count>0 / ${members.length}</span>
         </div>
@@ -1924,7 +2166,7 @@ const resultsEl = document.getElementById("results");
 
                         // Show floating banner with the picked name
                         nowPicking.innerHTML = `
-          <span class="label">→ Team ${color.name}</span>
+          <span class="label">${escapeHtml(t("nowPickingLabel", `${t("teamPrefix")} ${paletteName(color)}`))}</span>
           ${escapeHtml(name)}${lvlBanner}
         `;
                         nowPicking.style.background = color.bg;
@@ -1968,6 +2210,29 @@ const resultsEl = document.getElementById("results");
                 return div.innerHTML;
             }
 
+            // ── Editable team names ───────────────────────────────────────────────────
+            resultsEl.addEventListener("blur", (e) => {
+                const span = e.target.closest(".team-name[contenteditable]");
+                if (!span) return;
+                const idx = parseInt(span.dataset.teamIdx, 10);
+                const name = span.textContent.trim();
+                if (!name) {
+                    teamNames[idx] = "";
+                    span.textContent = `${t("teamPrefix")} ${paletteName(PALETTE[idx % PALETTE.length])}`;
+                } else {
+                    teamNames[idx] = name;
+                }
+                buildMatchLog();
+                pushTeams();
+            }, true);
+
+            resultsEl.addEventListener("keydown", (e) => {
+                if (e.target.matches(".team-name[contenteditable]") && e.key === "Enter") {
+                    e.preventDefault();
+                    e.target.blur();
+                }
+            }, true);
+
             // ── Firebase push helpers ─────────────────────────────────────────────────
             function _fbCtx() {
                 if (!window.__sync || !sessionId) return null;
@@ -2002,6 +2267,9 @@ const resultsEl = document.getElementById("results");
                         json: JSON.stringify(lastTeams),
                         sequenceJson: lastSequence
                             ? JSON.stringify(lastSequence)
+                            : null,
+                        teamNamesJson: teamNames.length
+                            ? JSON.stringify(teamNames)
                             : null,
                         updatedAt: fb.serverTimestamp(),
                         by: clientId,
@@ -2094,6 +2362,11 @@ const resultsEl = document.getElementById("results");
                         parsedSeq = JSON.parse(d.sequenceJson);
                     } catch (e) {}
                 }
+                if (d.teamNamesJson) {
+                    try { teamNames = JSON.parse(d.teamNamesJson); } catch (e) { teamNames = []; }
+                } else {
+                    teamNames = [];
+                }
                 lastSequence = parsedSeq;
                 applyingRemote = true;
                 try {
@@ -2145,12 +2418,12 @@ const resultsEl = document.getElementById("results");
                     pill.classList.add("hosting");
                     pill.classList.remove("viewing");
                     const v = Math.max(0, connectedCount - 1);
-                    text.textContent = `Hosting · ${v} viewer${v !== 1 ? "s" : ""}`;
+                    text.textContent = t("pillHosting", v, v !== 1 ? t("s") : "");
                 } else {
                     pill.classList.add("viewing");
                     pill.classList.remove("hosting");
                     const o = Math.max(0, connectedCount - 1);
-                    text.textContent = `Viewing (read-only) · ${o} other${o !== 1 ? "s" : ""}`;
+                    text.textContent = t("pillViewing", o, o !== 1 ? t("s") : "");
                 }
             }
 
@@ -2249,17 +2522,35 @@ const resultsEl = document.getElementById("results");
 
             let lastTeams = null;
             let lastSequence = null;
+            let teamNames = []; // custom names set by user; index matches team index
+
+            function getTeamName(idx) {
+                return teamNames[idx] || `${t("teamPrefix")} ${paletteName(PALETTE[idx % PALETTE.length])}`;
+            }
+
+            // Suggest number of rounds: C(avgTeamSize, 2) so each unique doubles pair
+            // within a team gets one match together. Clamped to a playable range.
+            function suggestRounds(teams) {
+                const total = teams.reduce((s, t) => s + t.length, 0);
+                const avg = total / teams.length;
+                const pairs = Math.floor(avg * (avg - 1) / 2);
+                return Math.min(20, Math.max(4, pairs || Math.ceil(avg)));
+            }
 
             function doSplit() {
                 const result = splitTeams();
                 if (!result) return;
                 lastTeams = result.teams;
                 lastSequence = result.sequence;
+                teamNames = [];
                 // New split = fresh rosters, so old pairings are invalid. Wipe match state.
                 matchlogState = [];
                 renderTeams(result);
-                // Build/refresh match log only when there are at least 2 teams of 2+ players each
-                setTimeout(() => buildMatchLog(), 100);
+                // Auto-suggest rounds and build match log
+                setTimeout(() => {
+                    roundCountEl.value = suggestRounds(lastTeams);
+                    buildMatchLog();
+                }, 100);
                 // Broadcast to viewers
                 pushTeams();
                 pushMatchlog();
@@ -2275,8 +2566,9 @@ const resultsEl = document.getElementById("results");
             const roundsIncBtn = document.getElementById("roundsInc");
             const roundsDecBtn = document.getElementById("roundsDec");
             const copyMatchlogBtn = document.getElementById("copyMatchlogBtn");
-            const resetMatchlogBtn =
-                document.getElementById("resetMatchlogBtn");
+            const resetMatchlogBtn = document.getElementById("resetMatchlogBtn");
+            const toggleNotesBtn = document.getElementById("toggleNotesBtn");
+            let showNotes = false;
 
             // Persist user's row data across rebuilds (when round count changes etc.)
             // Indexed by round number (0-based). Each entry: { a1, a2, b1, b2, scoreA, scoreB, notes }
@@ -2286,7 +2578,7 @@ const resultsEl = document.getElementById("results");
                 if (!lastTeams || lastTeams.length < 2) return null;
                 return lastTeams.map((members, idx) => ({
                     idx,
-                    name: `Team ${PALETTE[idx % PALETTE.length].name}`,
+                    name: getTeamName(idx),
                     members,
                 }));
             }
@@ -2307,7 +2599,7 @@ const resultsEl = document.getElementById("results");
                 if (!lastTeams) return "";
                 return lastTeams
                     .map((_, idx) => {
-                        const name = `Team ${PALETTE[idx % PALETTE.length].name}`;
+                        const name = getTeamName(idx);
                         const sel = idx === selectedIdx ? " selected" : "";
                         return `<option value="${idx}"${sel}>${escapeHtml(name)}</option>`;
                     })
@@ -2322,6 +2614,7 @@ const resultsEl = document.getElementById("results");
                 }
 
                 matchlogCard.style.display = "block";
+                matchlogCard.classList.toggle("notes-hidden", !showNotes);
                 const multiTeam = teams.length > 2;
                 const numRounds = Math.max(1, parseInt(roundCountEl.value, 10) || 8);
 
@@ -2401,7 +2694,7 @@ const resultsEl = document.getElementById("results");
                 }
                 matchlogFoot.innerHTML = `
       <tr class="totals-row">
-        <td colspan="1" class="total-label">Totals</td>
+        <td colspan="1" class="total-label">${escapeHtml(t("totalsLabel"))}</td>
         <td class="total-cell team-a-total" id="totalA">0</td>
         <td class="total-cell" id="totalCenter">—</td>
         <td class="total-cell team-b-total" id="totalB">0</td>
@@ -2437,7 +2730,7 @@ const resultsEl = document.getElementById("results");
             <span class="round-num">R${i + 1}</span>
           </div>
           <div class="round-card-section round-card-section-a" style="border-left:4px solid ${colorA.bg}">
-            <div class="round-card-label">Team ${escapeHtml(colorA.name)}</div>
+            <div class="round-card-label">${escapeHtml(getTeamName(tAIdx))}</div>
             ${multiTeam ? `<select class="round-card-team-picker" data-field="teamA">${teamPickerOpts(tAIdx)}</select>` : ""}
             <div class="round-card-pair">
               <select data-field="a1">${a1Opts}</select>
@@ -2451,7 +2744,7 @@ const resultsEl = document.getElementById("results");
             <input type="number" data-field="scoreB" min="0" max="99" placeholder="–">
           </div>
           <div class="round-card-section round-card-section-b" style="border-left:4px solid ${colorB.bg}">
-            <div class="round-card-label">Team ${escapeHtml(colorB.name)}</div>
+            <div class="round-card-label">${escapeHtml(getTeamName(tBIdx))}</div>
             ${multiTeam ? `<select class="round-card-team-picker" data-field="teamB">${teamPickerOpts(tBIdx)}</select>` : ""}
             <div class="round-card-pair">
               <select data-field="b1">${b1Opts}</select>
@@ -2460,8 +2753,8 @@ const resultsEl = document.getElementById("results");
             </div>
           </div>
           <div class="round-card-section round-card-notes">
-            <div class="round-card-label">Notes</div>
-            <input type="text" data-field="notes" placeholder="e.g. great rally">
+            <div class="round-card-label">${escapeHtml(t("colNotes"))}</div>
+            <input type="text" data-field="notes" placeholder="${escapeHtml(t("notesPlaceholder"))}">
           </div>
         `;
                     card.querySelector('[data-field="a1"]').value = s.a1;
@@ -2478,7 +2771,7 @@ const resultsEl = document.getElementById("results");
                 tc.className = "totals-card";
                 tc.innerHTML = `
           <div>
-            <div class="totals-label">Totals</div>
+            <div class="totals-label">${escapeHtml(t("totalsLabel"))}</div>
             <div class="totals-score"><span id="mTotalA">0</span> — <span id="mTotalB">0</span></div>
           </div>
           <div class="totals-winner" id="mWinner"></div>
@@ -2508,9 +2801,9 @@ const resultsEl = document.getElementById("results");
                 const teams = getTeamLabels();
                 const twoTeams = teams && teams.length === 2;
                 let winnerHtml = "";
-                if (totalA > totalB) winnerHtml = twoTeams ? `🏆 <strong>${escapeHtml(teams[0].name)}</strong> leads` : "🏆 Side A leads";
-                else if (totalB > totalA) winnerHtml = twoTeams ? `🏆 <strong>${escapeHtml(teams[1].name)}</strong> leads` : "🏆 Side B leads";
-                else if (totalA > 0) winnerHtml = "🤝 Tied";
+                if (totalA > totalB) winnerHtml = twoTeams ? `🏆 <strong>${escapeHtml(teams[0].name)}</strong> ${t("leads")}` : t("sideALeads");
+                else if (totalB > totalA) winnerHtml = twoTeams ? `🏆 <strong>${escapeHtml(teams[1].name)}</strong> ${t("leads")}` : t("sideBLeads");
+                else if (totalA > 0) winnerHtml = t("tied");
                 // Desktop totals
                 const totalAEl = document.getElementById("totalA");
                 const totalBEl = document.getElementById("totalB");
@@ -2664,6 +2957,13 @@ const resultsEl = document.getElementById("results");
                 pushMatchlog();
             });
 
+            toggleNotesBtn.addEventListener("click", () => {
+                showNotes = !showNotes;
+                matchlogCard.classList.toggle("notes-hidden", !showNotes);
+                const span = toggleNotesBtn.querySelector("[data-i18n]");
+                if (span) { span.dataset.i18n = showNotes ? "btnHideNotes" : "btnShowNotes"; span.textContent = t(span.dataset.i18n); }
+            });
+
             // Reset scores button (keeps team rosters & rounds; clears pairings/scores/notes)
             resetMatchlogBtn.addEventListener("click", () => {
                 matchlogState = matchlogState.map((s) => ({
@@ -2678,7 +2978,7 @@ const resultsEl = document.getElementById("results");
                     notes: "",
                 }));
                 buildMatchLog();
-                showToast("Scoresheet reset", "success");
+                showToast(t("toastScoresheetReset"), "success");
                 pushMatchlog();
             });
 
@@ -2687,12 +2987,12 @@ const resultsEl = document.getElementById("results");
                 const teams = getTeamLabels();
                 if (!teams) return;
                 const lines = [];
-                lines.push(
-                    ["Round", "Team A", "Score", "Team B", "Notes"].join("\t"),
-                );
+                const cols = [t("tsvRound"), t("tsvTeamA"), t("tsvScore"), t("tsvTeamB")];
+                if (showNotes) cols.push(t("tsvNotes"));
+                lines.push(cols.join("\t"));
                 matchlogState.forEach((r, i) => {
-                    const tAName = PALETTE[(r.teamA ?? 0) % PALETTE.length].name;
-                    const tBName = PALETTE[(r.teamB ?? 1) % PALETTE.length].name;
+                    const tAName = paletteName(PALETTE[(r.teamA ?? 0) % PALETTE.length]);
+                    const tBName = paletteName(PALETTE[(r.teamB ?? 1) % PALETTE.length]);
                     const rawPairA = [r.a1, r.a2].filter(Boolean).join(" + ");
                     const rawPairB = [r.b1, r.b2].filter(Boolean).join(" + ");
                     const teamAPair = rawPairA ? `${tAName}: ${rawPairA}` : "";
@@ -2701,11 +3001,9 @@ const resultsEl = document.getElementById("results");
                         r.scoreA !== "" && r.scoreB !== ""
                             ? `${r.scoreA}-${r.scoreB}`
                             : "";
-                    lines.push(
-                        [i + 1, teamAPair, score, teamBPair, r.notes].join(
-                            "\t",
-                        ),
-                    );
+                    const row = [i + 1, teamAPair, score, teamBPair];
+                    if (showNotes) row.push(r.notes);
+                    lines.push(row.join("\t"));
                 });
                 let totalA = 0,
                     totalB = 0;
@@ -2718,11 +3016,13 @@ const resultsEl = document.getElementById("results");
                 const penalty = document
                     .getElementById("penaltyText")
                     .value.trim();
-                lines.push(["Totals", totalA, "", totalB, penalty].join("\t"));
+                const totalsRow = ["Totals", totalA, "", totalB];
+                if (showNotes) totalsRow.push(penalty);
+                lines.push(totalsRow.join("\t"));
 
                 navigator.clipboard.writeText(lines.join("\n")).then(
-                    () => showToast("Scoresheet copied ✓", "success"),
-                    () => showToast("Copy failed", "error"),
+                    () => showToast(t("toastCopied"), "success"),
+                    () => showToast(t("toastCopyFailed"), "error"),
                 );
             });
 
@@ -2761,7 +3061,7 @@ const resultsEl = document.getElementById("results");
                 setModeUI("random");
                 updateCount();
                 namesEl.focus();
-                showToast("Cleared", "success");
+                showToast(t("toastCleared"), "success");
                 pushClear();
             }
 
@@ -2832,14 +3132,8 @@ const resultsEl = document.getElementById("results");
                     const viewerUrl =
                         location.origin + location.pathname + "#s=" + sessionId;
                     navigator.clipboard.writeText(viewerUrl).then(
-                        () =>
-                            showToast(
-                                "Viewer link copied — share it! 📡",
-                                "success",
-                            ),
-                        () => {
-                            prompt("Copy this viewer link:", viewerUrl);
-                        },
+                        () => showToast(t("toastShareCopied"), "success"),
+                        () => { prompt("Copy this viewer link:", viewerUrl); },
                     );
                 });
 
@@ -2861,9 +3155,15 @@ const resultsEl = document.getElementById("results");
                 if (lastTeams && lastTeams.length >= 2) buildMatchLog();
             });
 
+            // Lang toggle
+            document.getElementById("langToggle").addEventListener("click", () => {
+                setLang(currentLang === "en" ? "vi" : "en");
+            });
+
             // Initial count + mode UI
             updateCount();
             setModeUI(getMode());
+            applyLang();
             // Boot Firebase sync if a session is in the URL
             initSync();
         </script>
@@ -2923,9 +3223,7 @@ const resultsEl = document.getElementById("results");
                 ).get("s");
                 if (sid) {
                     const note = document.getElementById("footerNote");
-                    if (note)
-                        note.textContent =
-                            "Live mode · data shared with your link recipients";
+                    if (note) note.textContent = t("footerNoteLive");
                 }
             }
         </script>
