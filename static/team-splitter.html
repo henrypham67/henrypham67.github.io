@@ -26,6 +26,11 @@
                 --peach: #ffc99a;
                 --shadow: 6px 6px 0 var(--ink);
                 --shadow-sm: 3px 3px 0 var(--ink);
+                --tap: 44px;
+                --radius-sm: 10px;
+                --radius-md: 14px;
+                --radius-lg: 20px;
+                --radius-xl: 24px;
             }
 
             * {
@@ -55,7 +60,8 @@
                         rgba(212, 255, 60, 0.12) 0%,
                         transparent 40%
                     );
-                padding: 32px 20px 80px;
+                /* mobile-first: bottom pad accounts for sticky bar */
+                padding: 18px 14px 80px;
             }
 
             /* Subtle grain texture */
@@ -79,7 +85,7 @@
             /* Header */
             header {
                 text-align: center;
-                margin-bottom: 48px;
+                margin-bottom: 28px;
                 position: relative;
             }
 
@@ -98,7 +104,7 @@
             }
 
             h1 {
-                font-size: clamp(48px, 9vw, 96px);
+                font-size: clamp(38px, 12vw, 56px);
                 font-weight: 900;
                 line-height: 0.9;
                 letter-spacing: -0.04em;
@@ -112,7 +118,7 @@
             }
 
             .subtitle {
-                font-size: 18px;
+                font-size: 15px;
                 color: rgba(26, 26, 26, 0.7);
                 max-width: 520px;
                 margin: 0 auto;
@@ -124,6 +130,7 @@
                 position: absolute;
                 pointer-events: none;
                 z-index: 0;
+                display: none;
             }
             .blob-1 {
                 top: 40px;
@@ -174,17 +181,17 @@
             .card {
                 background: var(--paper);
                 border: 3px solid var(--ink);
-                border-radius: 24px;
+                border-radius: 20px;
                 box-shadow: var(--shadow);
-                padding: 36px;
-                margin-bottom: 32px;
+                padding: 22px 18px;
+                margin-bottom: 24px;
                 position: relative;
             }
 
             .card-label {
                 position: absolute;
                 top: -14px;
-                left: 24px;
+                left: 16px;
                 background: var(--butter);
                 border: 3px solid var(--ink);
                 padding: 4px 14px;
@@ -214,16 +221,9 @@
 
             .row {
                 display: grid;
-                grid-template-columns: 200px 1fr;
-                gap: 24px;
+                grid-template-columns: 1fr;
+                gap: 16px;
                 align-items: start;
-            }
-
-            @media (max-width: 720px) {
-                .row {
-                    grid-template-columns: 1fr;
-                    gap: 16px;
-                }
             }
 
             input[type="number"],
@@ -249,7 +249,7 @@
             }
 
             textarea {
-                min-height: 180px;
+                min-height: 140px;
                 resize: vertical;
                 font-family: "JetBrains Mono", monospace;
                 font-size: 15px;
@@ -335,17 +335,18 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 8px;
-                padding: 8px 14px;
+                padding: 12px 18px;
                 border: 2px solid var(--ink);
                 border-radius: 999px;
                 background: var(--paper);
                 font-family: "JetBrains Mono", monospace;
-                font-size: 13px;
+                font-size: 14px;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.15s;
                 box-shadow: 2px 2px 0 var(--ink);
                 user-select: none;
+                min-height: var(--tap);
             }
             .chip:hover {
                 background: var(--sky);
@@ -361,24 +362,27 @@
             /* Buttons */
             .actions {
                 display: flex;
-                flex-wrap: wrap;
-                gap: 14px;
-                margin-top: 32px;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 24px;
             }
 
             .btn {
                 border: 3px solid var(--ink);
                 border-radius: 14px;
-                padding: 16px 28px;
+                padding: 13px 16px;
                 font-family: "Fraunces", serif;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 700;
                 cursor: pointer;
                 transition: all 0.15s ease;
-                box-shadow: var(--shadow);
+                box-shadow: 4px 4px 0 var(--ink);
                 display: inline-flex;
                 align-items: center;
+                justify-content: center;
                 gap: 10px;
+                width: 100%;
+                min-height: var(--tap);
             }
 
             .btn-primary {
@@ -406,15 +410,15 @@
 
             .results-header {
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
+                flex-direction: column;
+                align-items: flex-start;
                 margin-bottom: 24px;
                 flex-wrap: wrap;
-                gap: 12px;
+                gap: 8px;
             }
 
             .results-title {
-                font-size: 32px;
+                font-size: 22px;
                 font-weight: 900;
                 letter-spacing: -0.02em;
             }
@@ -433,8 +437,8 @@
 
             .teams-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-                gap: 20px;
+                grid-template-columns: 1fr;
+                gap: 14px;
             }
 
             .team {
@@ -442,7 +446,7 @@
                 border: 3px solid var(--ink);
                 border-radius: 20px;
                 box-shadow: var(--shadow);
-                padding: 24px;
+                padding: 20px;
                 position: relative;
                 overflow: hidden;
                 animation: cardIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)
@@ -508,6 +512,30 @@
                 color: rgba(26, 26, 26, 0.6);
             }
 
+            .team-total {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11px;
+                font-weight: 700;
+                background: var(--accent-soft);
+                border: 1.5px solid var(--ink);
+                padding: 2px 8px;
+                border-radius: 999px;
+                color: var(--accent);
+                letter-spacing: 0.05em;
+            }
+
+            .member-level {
+                margin-left: auto;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11px;
+                font-weight: 700;
+                background: var(--butter);
+                border: 1.5px solid var(--ink);
+                padding: 2px 8px;
+                border-radius: 999px;
+                flex-shrink: 0;
+            }
+
             .team-color-strip {
                 position: absolute;
                 top: 0;
@@ -528,10 +556,10 @@
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                padding: 10px 12px;
+                padding: 9px 12px;
                 background: var(--bg);
                 border-radius: 10px;
-                font-size: 17px;
+                font-size: 16px;
                 font-weight: 500;
                 transition: transform 0.2s;
                 animation: memberDrop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -563,10 +591,11 @@
                 transform: translate(-50%, -50%) scale(0.5);
                 background: var(--ink);
                 color: var(--bg);
-                padding: 18px 32px;
+                padding: 14px 20px;
                 border-radius: 16px;
                 font-family: "Fraunces", serif;
-                font-size: 28px;
+                font-size: 24px;
+                line-height: 1.15;
                 font-weight: 900;
                 letter-spacing: -0.01em;
                 z-index: 200;
@@ -621,7 +650,7 @@
             /* Toast / error */
             .toast {
                 position: fixed;
-                bottom: 30px;
+                bottom: 80px;
                 left: 50%;
                 transform: translateX(-50%) translateY(100px);
                 background: var(--ink);
@@ -728,12 +757,12 @@
             .pair-select select {
                 flex: 1;
                 min-width: 0;
-                padding: 7px 8px;
+                padding: 10px 8px;
                 border: 1.5px solid var(--ink);
                 border-radius: 7px;
                 background: var(--paper);
                 font-family: "Fraunces", serif;
-                font-size: 14px;
+                font-size: 16px;
                 color: var(--ink);
                 cursor: pointer;
                 transition: background 0.15s;
@@ -759,8 +788,8 @@
                 justify-content: center;
             }
             .score-input input {
-                width: 42px;
-                padding: 7px 4px;
+                width: 48px;
+                padding: 8px 4px;
                 border: 1.5px solid var(--ink);
                 border-radius: 7px;
                 text-align: center;
@@ -789,12 +818,12 @@
 
             .notes-input {
                 width: 100%;
-                padding: 7px 10px;
+                padding: 10px 12px;
                 border: 1.5px solid transparent;
                 border-radius: 7px;
                 background: transparent;
                 font-family: "Fraunces", serif;
-                font-size: 14px;
+                font-size: 16px;
                 color: var(--ink);
                 transition: all 0.15s;
             }
@@ -841,6 +870,10 @@
                 font-style: italic;
                 color: rgba(26, 26, 26, 0.75);
                 font-size: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
             }
             .penalty-line strong {
                 color: var(--accent);
@@ -850,7 +883,7 @@
             .matchlog-toolbar {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 12px;
+                gap: 10px;
                 align-items: center;
                 margin-bottom: 8px;
             }
@@ -858,7 +891,7 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                margin-left: auto;
+                margin-left: 0;
             }
             .matchlog-toolbar .rounds-stepper label {
                 margin: 0;
@@ -880,12 +913,12 @@
             }
             .team-picker {
                 width: 100%;
-                padding: 5px 8px;
+                padding: 10px 10px;
                 border: 1.5px solid var(--ink);
                 border-radius: 7px;
                 background: var(--accent-soft);
                 font-family: "Fraunces", serif;
-                font-size: 13px;
+                font-size: 16px;
                 font-weight: 700;
                 color: var(--ink);
                 cursor: pointer;
@@ -894,61 +927,248 @@
             .team-picker:hover { background: var(--butter); }
             .team-picker:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-            /* Mobile: scroll horizontally rather than crush the table */
+            /* Table scroll container — hidden on mobile, visible on desktop */
             .matchlog-scroll {
                 overflow-x: auto;
+                display: none;
             }
-            @media (max-width: 720px) {
-                body { padding: 18px 14px 60px; }
-                .blob { display: none; }
-                header { margin-bottom: 32px; }
-                h1 { font-size: clamp(40px, 11vw, 56px); }
-                .subtitle { font-size: 16px; }
-                .card { padding: 22px 18px; border-radius: 20px; }
-                .card-label { left: 16px; }
 
-                .actions { gap: 10px; margin-top: 24px; }
+            /* ── Desktop enhancements (≥ 720px) ─────────────────────────────── */
+            @media (min-width: 720px) {
+                body { padding: 32px 20px 80px; }
+                .blob { display: block; }
+                header { margin-bottom: 48px; }
+                h1 { font-size: clamp(48px, 9vw, 96px); }
+                .subtitle { font-size: 18px; }
+                .card { padding: 36px; border-radius: 24px; margin-bottom: 32px; }
+                .card-label { left: 24px; }
+                .row { grid-template-columns: 200px 1fr; gap: 24px; }
+                textarea { min-height: 180px; }
+                .chip { padding: 8px 14px; font-size: 13px; min-height: 0; }
+                .actions { flex-direction: row; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
                 .btn {
-                    flex: 1 1 calc(50% - 10px);
-                    justify-content: center;
-                    padding: 13px 16px;
-                    font-size: 16px;
-                    box-shadow: 4px 4px 0 var(--ink);
+                    width: auto;
+                    padding: 16px 28px;
+                    font-size: 18px;
+                    box-shadow: var(--shadow);
+                    justify-content: flex-start;
+                    min-height: 0;
                 }
+                .results-header { flex-direction: row; justify-content: space-between; align-items: center; gap: 12px; }
+                .results-title { font-size: 32px; }
+                .teams-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+                .team { padding: 24px; }
+                .member { font-size: 17px; padding: 10px 12px; }
+                .now-picking { font-size: 28px; padding: 18px 32px; line-height: normal; }
+                .toast { bottom: 30px; }
+                .conn-pill { margin-top: 14px; padding: 6px 14px; }
+                .manual-teams { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+                .pair-select select { padding: 7px 8px; font-size: 14px; }
+                .team-picker { padding: 5px 8px; font-size: 13px; }
+                .notes-input { padding: 7px 10px; font-size: 14px; }
+                .score-input input { width: 42px; padding: 7px 4px; }
+                .matchlog-toolbar { gap: 12px; }
+                .matchlog-toolbar .rounds-stepper { margin-left: auto; }
+                .matchlog-table th, .matchlog-table td { padding: 10px 12px; }
+                .penalty-line { flex-direction: row; align-items: center; gap: 0; }
+                #penaltyText { width: auto; min-width: 280px; margin-left: 6px; }
+                /* Hide mobile round-cards list; show table */
+                #matchlogList { display: none !important; }
+                .matchlog-scroll { display: block; }
+            }
 
-                .now-picking {
-                    font-size: 22px;
-                    padding: 14px 20px;
-                    line-height: 1.15;
-                }
+            /* ── Sticky primary CTA (mobile only) ──────────────────────────── */
+            .sticky-bar {
+                display: none;
+                position: fixed;
+                left: 0; right: 0; bottom: 0;
+                padding: 10px 14px;
+                background: var(--bg);
+                border-top: 3px solid var(--ink);
+                z-index: 50;
+            }
+            .sticky-bar.show { display: flex; gap: 10px; }
+            .sticky-bar .btn { flex: 1; }
+            @media (min-width: 720px) { .sticky-bar { display: none !important; } }
 
-                .penalty-line {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                    align-items: stretch;
-                }
-                .penalty-line .notes-input,
-                #penaltyText {
-                    width: 100% !important;
-                    min-width: 0 !important;
-                    margin-left: 0 !important;
-                    font-size: 16px;
-                }
+            /* ── Mobile round-card list ─────────────────────────────────────── */
+            #matchlogList { display: block; }
+            @media (min-width: 720px) { #matchlogList { display: none !important; } }
 
-                .notes-input,
-                .pair-select select,
-                .team-picker { font-size: 16px; }
+            .round-card {
+                background: var(--paper);
+                border: 3px solid var(--ink);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-sm);
+                overflow: hidden;
+                margin-bottom: 12px;
+            }
+            .round-card-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 14px;
+                border-bottom: 2px dashed var(--ink);
+                background: var(--bg);
+            }
+            .round-card-section {
+                padding: 12px 14px;
+                border-bottom: 1.5px solid rgba(26, 26, 26, 0.12);
+            }
+            .round-card-section:last-child { border-bottom: none; }
+            .round-card-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: rgba(26, 26, 26, 0.55);
+                margin-bottom: 8px;
+            }
+            .round-card-pair {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .round-card-pair select {
+                flex: 1;
+                min-width: 0;
+                padding: 10px 10px;
+                border: 1.5px solid var(--ink);
+                border-radius: 8px;
+                background: var(--paper);
+                font-family: "Fraunces", serif;
+                font-size: 16px;
+                color: var(--ink);
+                cursor: pointer;
+                transition: background 0.15s;
+            }
+            .round-card-pair select:hover { background: var(--accent-soft); }
+            .round-card-pair select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+            .round-card-pair .vs {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 11px;
+                font-weight: 600;
+                color: rgba(26, 26, 26, 0.5);
+                flex-shrink: 0;
+            }
+            .round-card-score {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                padding: 12px 14px;
+                border-bottom: 1.5px solid rgba(26, 26, 26, 0.12);
+                background: var(--bg);
+            }
+            .round-card-score input {
+                width: 56px;
+                padding: 8px 4px;
+                border: 2px solid var(--ink);
+                border-radius: 8px;
+                text-align: center;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 22px;
+                font-weight: 700;
+                background: var(--paper);
+                color: var(--ink);
+                box-shadow: none;
+                border-radius: 8px;
+                -moz-appearance: textfield;
+            }
+            .round-card-score input::-webkit-outer-spin-button,
+            .round-card-score input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+            .round-card-score input:focus { outline: none; background: var(--accent-soft); border-color: var(--accent); transform: none; box-shadow: none; }
+            .round-card-score .dash {
+                font-family: "JetBrains Mono", monospace;
+                font-weight: 700;
+                color: rgba(26, 26, 26, 0.4);
+            }
+            .round-card-notes input {
+                width: 100%;
+                padding: 10px 12px;
+                border: 1.5px solid transparent;
+                border-radius: 8px;
+                background: transparent;
+                font-family: "Fraunces", serif;
+                font-size: 16px;
+                color: var(--ink);
+                transition: all 0.15s;
+                box-shadow: none;
+            }
+            .round-card-notes input:hover { border-color: rgba(26, 26, 26, 0.2); }
+            .round-card-notes input:focus { outline: none; background: var(--paper); border-color: var(--ink); transform: none; box-shadow: none; }
+            .round-card-team-picker {
+                width: 100%;
+                padding: 10px 10px;
+                border: 1.5px solid var(--ink);
+                border-radius: 8px;
+                background: var(--accent-soft);
+                font-family: "Fraunces", serif;
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--ink);
+                cursor: pointer;
+                margin-bottom: 8px;
+            }
+            .round-card.winner-a .round-card-section-a { background: rgba(212, 255, 60, 0.2); }
+            .round-card.winner-b .round-card-section-b { background: rgba(168, 216, 255, 0.2); }
+            .totals-card {
+                background: var(--butter);
+                border: 3px solid var(--ink);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-sm);
+                padding: 14px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                font-family: "JetBrains Mono", monospace;
+                font-weight: 700;
+                margin-bottom: 12px;
+            }
+            .totals-card .totals-score {
+                font-size: 20px;
+                letter-spacing: -0.02em;
+            }
+            .totals-card .totals-label {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                opacity: 0.65;
+            }
+            .totals-card .totals-winner {
+                font-size: 13px;
+            }
 
-                .matchlog-table { min-width: 640px; }
-                .matchlog-table th,
-                .matchlog-table td { padding: 8px; }
-                .matchlog-toolbar { gap: 10px; }
-                .matchlog-toolbar .rounds-stepper { margin-left: 0; }
+            /* Viewer lockdown for round-cards */
+            body.is-viewer .round-card input,
+            body.is-viewer .round-card select {
+                pointer-events: none;
+                opacity: 0.55;
+                background: var(--bg);
+            }
 
-                .results-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-                .results-title { font-size: 26px; }
-                .teams-grid { grid-template-columns: 1fr; gap: 14px; }
+            /* ── Reduced motion ──────────────────────────────────────────────── */
+            @media (prefers-reduced-motion: reduce) {
+                .member { animation: none; }
+                .team { animation: none; }
+                .now-picking { transition: opacity 0.2s; transform: translate(-50%, -50%) scale(1); }
+                .now-picking.show { opacity: 1; }
+                @keyframes float { to { transform: none; } }
+                @keyframes float-rot { to { transform: rotate(45deg); } }
+            }
+
+            .manual-teams {
+                display: grid;
+                gap: 14px;
+                grid-template-columns: 1fr;
+            }
+
+            body.is-viewer #manualTeams textarea {
+                pointer-events: none;
+                opacity: 0.55;
+                background: var(--bg);
             }
 
             /* Footer */
@@ -971,7 +1191,7 @@
                 display: none;
                 align-items: center;
                 gap: 6px;
-                padding: 6px 14px;
+                padding: 6px 12px;
                 border: 2px solid var(--ink);
                 border-radius: 999px;
                 font-family: "JetBrains Mono", monospace;
@@ -980,7 +1200,7 @@
                 letter-spacing: 0.05em;
                 background: var(--paper);
                 box-shadow: var(--shadow-sm);
-                margin-top: 14px;
+                margin-top: 8px;
                 transition: background 0.2s;
             }
             .conn-pill.show {
@@ -1081,7 +1301,7 @@
                         </div>
                     </div>
 
-                    <div class="field" style="margin-bottom: 0">
+                    <div class="field" id="namesField" style="margin-bottom: 0">
                         <label for="names">Member names</label>
                         <textarea
                             id="names"
@@ -1096,6 +1316,11 @@ Riley"
                     </div>
                 </div>
 
+                <div id="manualTeams" style="display:none; margin-top: 20px; margin-bottom: 0">
+                    <div class="manual-teams" id="manualTeamsGrid"></div>
+                    <p class="hint" id="manualCountHint"></p>
+                </div>
+
                 <div class="field" style="margin-top: 28px; margin-bottom: 0">
                     <label>Splitting style</label>
                     <div class="options">
@@ -1108,17 +1333,21 @@ Riley"
                             />
                             <span>🎲 Random</span>
                         </label>
-                        <label class="chip" data-mode="alphabetical">
+                        <label class="chip" data-mode="byLevel">
                             <input
                                 type="radio"
                                 name="mode"
-                                value="alphabetical"
+                                value="byLevel"
                             />
-                            <span>🔤 Alphabetical</span>
+                            <span>⚖️ By level</span>
                         </label>
-                        <label class="chip" data-mode="order">
-                            <input type="radio" name="mode" value="order" />
-                            <span>↕ Keep order</span>
+                        <label class="chip" data-mode="manual">
+                            <input
+                                type="radio"
+                                name="mode"
+                                value="manual"
+                            />
+                            <span>✋ Manual</span>
                         </label>
                     </div>
                 </div>
@@ -1127,22 +1356,6 @@ Riley"
                     <button class="btn btn-primary viewer-hide" id="splitBtn">
                         <span>Split them up</span>
                         <span>→</span>
-                    </button>
-                    <button
-                        class="btn btn-secondary viewer-hide"
-                        id="reshuffleBtn"
-                        style="display: none"
-                    >
-                        <span>↻</span>
-                        <span>Reshuffle</span>
-                    </button>
-                    <button
-                        class="btn btn-secondary"
-                        id="copyBtn"
-                        style="display: none"
-                    >
-                        <span>⎘</span>
-                        <span>Copy result</span>
                     </button>
                     <button
                         class="btn btn-secondary viewer-hide"
@@ -1213,6 +1426,10 @@ Riley"
                     </div>
                 </div>
 
+                <!-- Mobile: stacked round-cards (shown < 720px) -->
+                <div id="matchlogList"></div>
+
+                <!-- Desktop: table (shown ≥ 720px) -->
                 <div class="matchlog-scroll">
                     <table class="matchlog-table" id="matchlogTable">
                         <thead>
@@ -1236,12 +1453,6 @@ Riley"
                         class="notes-input"
                         id="penaltyText"
                         value="The losing team gets their face painted black."
-                        style="
-                            display: inline-block;
-                            width: auto;
-                            min-width: 280px;
-                            margin-left: 6px;
-                        "
                     />
                 </div>
 
@@ -1267,6 +1478,14 @@ Riley"
             </footer>
         </div>
 
+        <!-- Sticky primary CTA — appears on mobile when splitBtn scrolls off screen -->
+        <div class="sticky-bar viewer-hide" id="stickyBar">
+            <button class="btn btn-primary" id="stickyBtn">
+                <span>Split them up</span>
+                <span>→</span>
+            </button>
+        </div>
+
         <div class="toast" id="toast"></div>
         <div class="now-picking" id="nowPicking" aria-live="polite"></div>
 
@@ -1275,9 +1494,7 @@ Riley"
             const namesEl = document.getElementById("names");
             const countHint = document.getElementById("countHint");
             const splitBtn = document.getElementById("splitBtn");
-            const reshuffleBtn = document.getElementById("reshuffleBtn");
-            const copyBtn = document.getElementById("copyBtn");
-            const resultsEl = document.getElementById("results");
+const resultsEl = document.getElementById("results");
             const resultsCard = document.getElementById("resultsCard");
             const resultsMeta = document.getElementById("resultsMeta");
             const toast = document.getElementById("toast");
@@ -1335,6 +1552,26 @@ Riley"
                     .filter((n) => n.length > 0);
             }
 
+            // For "By level" mode: each line carries a name + a numeric level.
+            // Accepts "Alex 5", "Alex|5", "Alex, 5", "Alex (5)".
+            // Bare names (no number) keep level=null and fall back to the default.
+            function parseNameLevel(line) {
+                const trimmed = line.trim();
+                if (!trimmed) return null;
+                const m = trimmed.match(/^(.*?)[\s,|()]+(\d+)\)?\s*$/);
+                if (m && m[1].trim()) {
+                    return { name: m[1].trim(), level: parseInt(m[2], 10) };
+                }
+                return { name: trimmed, level: null };
+            }
+
+            function parseNamedLevels(text) {
+                return text
+                    .split(/[\n;]+/)
+                    .map(parseNameLevel)
+                    .filter(Boolean);
+            }
+
             function showToast(msg, type = "") {
                 toast.textContent = msg;
                 toast.className = "toast show " + type;
@@ -1346,8 +1583,75 @@ Riley"
             }
 
             function updateCount() {
+                const mode = getMode();
+                if (mode === "manual") {
+                    const textareas = document.querySelectorAll("#manualTeamsGrid textarea");
+                    let total = 0;
+                    textareas.forEach((ta) => (total += parseNames(ta.value).length));
+                    const el = document.getElementById("manualCountHint");
+                    if (el) el.textContent = `${total} ${total === 1 ? "name" : "names"} across ${textareas.length} team${textareas.length !== 1 ? "s" : ""}`;
+                    return;
+                }
+                if (mode === "byLevel") {
+                    const items = parseNamedLevels(namesEl.value);
+                    const withLvl = items.filter((i) => i.level != null).length;
+                    const missing = items.length - withLvl;
+                    const suffix = missing > 0 ? ` · ${missing} missing level (default 3)` : "";
+                    countHint.textContent = `${items.length} ${items.length === 1 ? "name" : "names"}${suffix}`;
+                    return;
+                }
                 const names = parseNames(namesEl.value);
                 countHint.textContent = `${names.length} ${names.length === 1 ? "name" : "names"} entered`;
+            }
+
+            function renderManualInputs() {
+                const count = Math.max(1, parseInt(teamCountEl.value, 10) || 2);
+                const grid = document.getElementById("manualTeamsGrid");
+                const prev = {};
+                grid.querySelectorAll("textarea[data-team]").forEach((ta) => {
+                    prev[ta.dataset.team] = ta.value;
+                });
+                grid.innerHTML = "";
+                for (let i = 0; i < count; i++) {
+                    const color = PALETTE[i % PALETTE.length];
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "field";
+                    wrapper.style.marginBottom = "0";
+                    const lbl = document.createElement("label");
+                    lbl.innerHTML = `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${color.bg};border:1.5px solid var(--ink);vertical-align:middle;margin-right:6px;"></span>Team ${escapeHtml(color.name)}`;
+                    const ta = document.createElement("textarea");
+                    ta.dataset.team = i;
+                    ta.placeholder = "One name per line…";
+                    ta.style.minHeight = "120px";
+                    ta.value = prev[i] !== undefined ? prev[i] : "";
+                    wrapper.appendChild(lbl);
+                    wrapper.appendChild(ta);
+                    grid.appendChild(wrapper);
+                }
+                updateCount();
+            }
+
+            const NAMES_PLACEHOLDER_DEFAULT =
+                "Type one name per line, or paste a comma-separated list…\ne.g.\nAlex\nJordan\nSam\nRiley";
+            const NAMES_PLACEHOLDER_BY_LEVEL =
+                "One name per line, with a level number (any scale, e.g. 1–10):\ne.g.\nAlex 5\nJordan 3\nSam 4\nRiley 2";
+
+            function setModeUI(mode) {
+                const namesField = document.getElementById("namesField");
+                const manualEl = document.getElementById("manualTeams");
+                if (mode === "manual") {
+                    if (namesField) namesField.style.display = "none";
+                    if (manualEl) manualEl.style.display = "block";
+                    renderManualInputs();
+                } else {
+                    if (namesField) namesField.style.display = "";
+                    if (manualEl) manualEl.style.display = "none";
+                    namesEl.placeholder =
+                        mode === "byLevel"
+                            ? NAMES_PLACEHOLDER_BY_LEVEL
+                            : NAMES_PLACEHOLDER_DEFAULT;
+                    updateCount();
+                }
             }
 
             function shuffle(arr) {
@@ -1384,38 +1688,109 @@ Riley"
 
             // --- Splitting logic ---
             function splitTeams() {
+                const mode = getMode();
+
+                if (mode === "manual") {
+                    const textareas = document.querySelectorAll("#manualTeamsGrid textarea");
+                    const result = [];
+                    let firstEmpty = -1;
+                    textareas.forEach((ta, idx) => {
+                        const members = parseNames(ta.value);
+                        result.push(members);
+                        if (members.length === 0 && firstEmpty === -1) firstEmpty = idx + 1;
+                    });
+                    if (result.flat().length === 0) {
+                        showToast("Add at least one name", "error");
+                        return null;
+                    }
+                    if (firstEmpty !== -1) {
+                        showToast(`Team ${firstEmpty} has no members`, "error");
+                        return null;
+                    }
+                    // Interleave names across teams for a dynamic reveal animation
+                    const maxLen = Math.max(...result.map((t) => t.length));
+                    const sequence = [];
+                    for (let i = 0; i < maxLen; i++) {
+                        result.forEach((members, teamIdx) => {
+                            if (members[i] !== undefined) sequence.push({ name: members[i], teamIdx });
+                        });
+                    }
+                    return { teams: result, sequence };
+                }
+
+                if (mode === "byLevel") {
+                    const items = parseNamedLevels(namesEl.value);
+                    const numTeams = parseInt(teamCountEl.value, 10);
+                    if (!items.length) {
+                        showToast("Add at least one name", "error");
+                        namesEl.focus();
+                        return null;
+                    }
+                    if (!numTeams || numTeams < 1) {
+                        showToast("Teams must be at least 1", "error");
+                        return null;
+                    }
+                    if (numTeams > items.length) {
+                        showToast(
+                            `Only ${items.length} ${items.length === 1 ? "person" : "people"} — can't make ${numTeams} teams`,
+                            "error",
+                        );
+                        return null;
+                    }
+                    // Default missing levels to 3, jitter ties for randomness, sort desc
+                    const DEFAULT_LEVEL = 3;
+                    const enriched = items.map((it) => ({
+                        name: it.name,
+                        level: it.level == null ? DEFAULT_LEVEL : it.level,
+                        jitter: Math.random(),
+                    }));
+                    enriched.sort(
+                        (a, b) => b.level - a.level || a.jitter - b.jitter,
+                    );
+                    // Snake distribution keeps team totals close
+                    const result = Array.from({ length: numTeams }, () => []);
+                    const sequence = [];
+                    enriched.forEach((it, i) => {
+                        const round = Math.floor(i / numTeams);
+                        const slot = i % numTeams;
+                        const teamIdx =
+                            round % 2 === 0 ? slot : numTeams - 1 - slot;
+                        result[teamIdx].push(it.name);
+                        sequence.push({
+                            name: it.name,
+                            teamIdx,
+                            level: it.level,
+                        });
+                    });
+                    return { teams: result, sequence };
+                }
+
+                // random mode
                 const names = parseNames(namesEl.value);
-                const teams = parseInt(teamCountEl.value, 10);
+                const numTeams = parseInt(teamCountEl.value, 10);
 
                 if (!names.length) {
                     showToast("Add at least one name", "error");
                     namesEl.focus();
                     return null;
                 }
-                if (!teams || teams < 1) {
+                if (!numTeams || numTeams < 1) {
                     showToast("Teams must be at least 1", "error");
                     return null;
                 }
-                if (teams > names.length) {
+                if (numTeams > names.length) {
                     showToast(
-                        `Only ${names.length} ${names.length === 1 ? "person" : "people"} — can't make ${teams} teams`,
+                        `Only ${names.length} ${names.length === 1 ? "person" : "people"} — can't make ${numTeams} teams`,
                         "error",
                     );
                     return null;
                 }
 
-                let ordered;
-                const mode = getMode();
-                if (mode === "random") ordered = shuffle(names);
-                else if (mode === "alphabetical")
-                    ordered = [...names].sort((a, b) => a.localeCompare(b));
-                else ordered = [...names];
-
-                // Round-robin distribution = always evenly balanced (off by max 1)
-                const result = Array.from({ length: teams }, () => []);
-                const sequence = []; // order in which people get assigned, with destination team index
+                const ordered = shuffle(names);
+                const result = Array.from({ length: numTeams }, () => []);
+                const sequence = [];
                 ordered.forEach((name, i) => {
-                    const teamIdx = i % teams;
+                    const teamIdx = i % numTeams;
                     result[teamIdx].push(name);
                     sequence.push({ name, teamIdx });
                 });
@@ -1443,7 +1818,19 @@ Riley"
                 resultsEl.innerHTML = "";
                 nowPicking.classList.remove("show");
                 const total = teams.reduce((s, t) => s + t.length, 0);
-                resultsMeta.textContent = `${total} people · ${teams.length} ${teams.length === 1 ? "team" : "teams"} · ${getMode()}`;
+                const modeLabels = { random: "random", manual: "manual", byLevel: "by level" };
+                resultsMeta.textContent = `${total} people · ${teams.length} ${teams.length === 1 ? "team" : "teams"} · ${modeLabels[getMode()] || getMode()}`;
+
+                // When the splitter passes per-pick levels, compute per-team totals
+                // so we can show a Σ badge and tag each member with their level.
+                const hasLevels = sequence.some((s) => s.level != null);
+                const teamTotals = hasLevels
+                    ? teams.map((_, idx) =>
+                          sequence
+                              .filter((s) => s.teamIdx === idx)
+                              .reduce((sum, s) => sum + (s.level || 0), 0),
+                      )
+                    : null;
 
                 // 1. Render empty team cards first
                 const grid = document.createElement("div");
@@ -1457,11 +1844,16 @@ Riley"
                     team.className = "team";
                     team.style.animationDelay = `${idx * 60}ms`;
 
+                    const totalBadge = hasLevels
+                        ? `<span class="team-total" title="Total skill level">Σ${teamTotals[idx]}</span>`
+                        : "";
+
                     team.innerHTML = `
         <div class="team-color-strip" style="background:${color.bg}"></div>
         <div class="team-header">
           <span class="team-num">T${String(idx + 1).padStart(2, "0")}</span>
           <span class="team-name">Team ${color.name}</span>
+          ${totalBadge}
           <span class="team-count" data-count>0 / ${members.length}</span>
         </div>
         <ul class="members" data-members></ul>
@@ -1473,10 +1865,6 @@ Riley"
 
                 resultsEl.appendChild(grid);
                 resultsCard.style.display = "block";
-                if (syncMode !== "viewer")
-                    reshuffleBtn.style.display = "inline-flex";
-                copyBtn.style.display = "inline-flex";
-
                 // Scroll results into view before the show begins
                 setTimeout(() => {
                     resultsCard.scrollIntoView({
@@ -1485,15 +1873,24 @@ Riley"
                     });
                 }, 80);
 
-                if (fastForward) {
-                    sequence.forEach(({ name, teamIdx }) => {
-                        const color = PALETTE[teamIdx % PALETTE.length];
-                        const li = document.createElement("li");
-                        li.className = "member";
-                        li.innerHTML = `
+                const memberRow = (name, teamIdx, level) => {
+                    const color = PALETTE[teamIdx % PALETTE.length];
+                    const lvlBadge =
+                        level != null
+                            ? `<span class="member-level" title="Level">★${level}</span>`
+                            : "";
+                    return `
           <span class="avatar" style="background:${color.bg}">${initials(name) || "·"}</span>
           <span>${escapeHtml(name)}</span>
+          ${lvlBadge}
         `;
+                };
+
+                if (fastForward) {
+                    sequence.forEach(({ name, teamIdx, level }) => {
+                        const li = document.createElement("li");
+                        li.className = "member";
+                        li.innerHTML = memberRow(name, teamIdx, level);
                         memberLists[teamIdx].appendChild(li);
                     });
                     countEls.forEach((el, idx) => {
@@ -1516,14 +1913,19 @@ Riley"
                               : 600;
 
                     for (let i = 0; i < sequence.length; i++) {
-                        const { name, teamIdx } = sequence[i];
+                        const { name, teamIdx, level } = sequence[i];
                         const color = PALETTE[teamIdx % PALETTE.length];
                         const teamCard = grid.children[teamIdx];
+
+                        const lvlBanner =
+                            level != null
+                                ? ` <span style="font-size:0.65em;opacity:0.85;">★${level}</span>`
+                                : "";
 
                         // Show floating banner with the picked name
                         nowPicking.innerHTML = `
           <span class="label">→ Team ${color.name}</span>
-          ${escapeHtml(name)}
+          ${escapeHtml(name)}${lvlBanner}
         `;
                         nowPicking.style.background = color.bg;
                         nowPicking.style.color = "var(--ink)";
@@ -1536,10 +1938,7 @@ Riley"
 
                         const li = document.createElement("li");
                         li.className = "member";
-                        li.innerHTML = `
-          <span class="avatar" style="background:${color.bg}">${initials(name) || "·"}</span>
-          <span>${escapeHtml(name)}</span>
-        `;
+                        li.innerHTML = memberRow(name, teamIdx, level);
                         memberLists[teamIdx].appendChild(li);
                         countEls[teamIdx].textContent =
                             `${memberLists[teamIdx].children.length} / ${teams[teamIdx].length}`;
@@ -1578,11 +1977,16 @@ Riley"
             function pushSetup() {
                 const fb = _fbCtx();
                 if (!fb || syncMode !== "host" || applyingRemote) return;
+                const manualTextareas = document.querySelectorAll("#manualTeamsGrid textarea");
+                const manualTeams = manualTextareas.length
+                    ? JSON.stringify([...manualTextareas].map((ta) => ta.value))
+                    : null;
                 fb.update(fb.ref(fb.db, `sessions/${sessionId}`), {
                     setup: {
                         teamCount: parseInt(teamCountEl.value, 10) || 2,
                         names: namesEl.value,
                         mode: getMode(),
+                        manualTeams,
                         updatedAt: fb.serverTimestamp(),
                         by: clientId,
                     },
@@ -1596,6 +2000,9 @@ Riley"
                 fb.update(fb.ref(fb.db, `sessions/${sessionId}`), {
                     teams: {
                         json: JSON.stringify(lastTeams),
+                        sequenceJson: lastSequence
+                            ? JSON.stringify(lastSequence)
+                            : null,
                         updatedAt: fb.serverTimestamp(),
                         by: clientId,
                     },
@@ -1626,6 +2033,7 @@ Riley"
                         teamCount: 2,
                         names: "",
                         mode: "random",
+                        manualTeams: null,
                         updatedAt: fb.serverTimestamp(),
                         by: clientId,
                     },
@@ -1653,6 +2061,17 @@ Riley"
                         target.classList.add("active");
                         target.querySelector("input").checked = true;
                     }
+                    setModeUI(d.mode || "random");
+                    if (d.mode === "manual" && d.manualTeams) {
+                        let parsed;
+                        try { parsed = JSON.parse(d.manualTeams); } catch (e) { parsed = null; }
+                        if (Array.isArray(parsed)) {
+                            const textareas = document.querySelectorAll("#manualTeamsGrid textarea");
+                            textareas.forEach((ta, i) => {
+                                if (parsed[i] != null) ta.value = parsed[i];
+                            });
+                        }
+                    }
                     updateCount();
                 } finally {
                     applyingRemote = false;
@@ -1669,11 +2088,20 @@ Riley"
                     return;
                 }
                 lastTeams = parsed;
+                let parsedSeq = null;
+                if (d.sequenceJson) {
+                    try {
+                        parsedSeq = JSON.parse(d.sequenceJson);
+                    } catch (e) {}
+                }
+                lastSequence = parsedSeq;
                 applyingRemote = true;
                 try {
-                    const sequence = lastTeams.flatMap((members, teamIdx) =>
-                        members.map((name) => ({ name, teamIdx })),
-                    );
+                    const sequence =
+                        parsedSeq ||
+                        lastTeams.flatMap((members, teamIdx) =>
+                            members.map((name) => ({ name, teamIdx })),
+                        );
                     renderTeams(
                         { teams: lastTeams, sequence },
                         { fastForward: true },
@@ -1820,11 +2248,13 @@ Riley"
             }
 
             let lastTeams = null;
+            let lastSequence = null;
 
             function doSplit() {
                 const result = splitTeams();
                 if (!result) return;
                 lastTeams = result.teams;
+                lastSequence = result.sequence;
                 // New split = fresh rosters, so old pairings are invalid. Wipe match state.
                 matchlogState = [];
                 renderTeams(result);
@@ -1833,23 +2263,6 @@ Riley"
                 // Broadcast to viewers
                 pushTeams();
                 pushMatchlog();
-            }
-
-            function copyResult() {
-                if (!lastTeams) return;
-                const text = lastTeams
-                    .map((members, i) => {
-                        const color = PALETTE[i % PALETTE.length];
-                        return (
-                            `Team ${color.name} (T${String(i + 1).padStart(2, "0")}):\n` +
-                            members.map((m) => `  • ${m}`).join("\n")
-                        );
-                    })
-                    .join("\n\n");
-                navigator.clipboard.writeText(text).then(
-                    () => showToast("Copied to clipboard ✓", "success"),
-                    () => showToast("Copy failed", "error"),
-                );
             }
 
             // ============================================================
@@ -1878,13 +2291,15 @@ Riley"
                 }));
             }
 
-            function memberOpts(teamIdx) {
+            function memberOpts(teamIdx, excludeName) {
                 if (!lastTeams || !lastTeams[teamIdx]) return '<option value="">—</option>';
                 return [
                     '<option value="">—</option>',
-                    ...lastTeams[teamIdx].map(
-                        (m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`,
-                    ),
+                    ...lastTeams[teamIdx]
+                        .filter((m) => !excludeName || m !== excludeName)
+                        .map(
+                            (m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`,
+                        ),
                 ].join("");
             }
 
@@ -1908,35 +2323,38 @@ Riley"
 
                 matchlogCard.style.display = "block";
                 const multiTeam = teams.length > 2;
+                const numRounds = Math.max(1, parseInt(roundCountEl.value, 10) || 8);
 
-                const numRounds = Math.max(
-                    1,
-                    parseInt(roundCountEl.value, 10) || 8,
-                );
-
-                // Trim or extend persistent state to match round count
+                // Sync state array length
                 while (matchlogState.length < numRounds) {
-                    matchlogState.push({
-                        teamA: 0,
-                        teamB: 1,
-                        a1: "",
-                        a2: "",
-                        b1: "",
-                        b2: "",
-                        scoreA: "",
-                        scoreB: "",
-                        notes: "",
-                    });
+                    matchlogState.push({ teamA: 0, teamB: 1, a1: "", a2: "", b1: "", b2: "", scoreA: "", scoreB: "", notes: "" });
                 }
-                if (matchlogState.length > numRounds) {
-                    matchlogState = matchlogState.slice(0, numRounds);
-                }
+                if (matchlogState.length > numRounds) matchlogState = matchlogState.slice(0, numRounds);
 
+                if (window.matchMedia("(max-width: 719px)").matches) {
+                    _buildRoundCards(numRounds, multiTeam);
+                } else {
+                    _buildTable(numRounds, multiTeam);
+                }
+                updateTotals();
+            }
+
+            function _buildTable(numRounds, multiTeam) {
                 matchlogBody.innerHTML = "";
                 for (let i = 0; i < numRounds; i++) {
                     const s = matchlogState[i];
                     const tAIdx = s.teamA ?? 0;
                     const tBIdx = s.teamB ?? 1;
+                    if (lastTeams[tAIdx] && lastTeams[tAIdx].length === 2) {
+                        s.a1 = lastTeams[tAIdx][0]; s.a2 = lastTeams[tAIdx][1];
+                    }
+                    if (lastTeams[tBIdx] && lastTeams[tBIdx].length === 2) {
+                        s.b1 = lastTeams[tBIdx][0]; s.b2 = lastTeams[tBIdx][1];
+                    }
+                    const a1Opts = memberOpts(tAIdx, s.a2);
+                    const a2Opts = memberOpts(tAIdx, s.a1);
+                    const b1Opts = memberOpts(tBIdx, s.b2);
+                    const b2Opts = memberOpts(tBIdx, s.b1);
                     const tr = document.createElement("tr");
                     tr.dataset.round = i;
                     tr.innerHTML = `
@@ -1945,9 +2363,9 @@ Riley"
           <div class="${multiTeam ? "team-pick-wrap" : ""}">
             ${multiTeam ? `<select data-field="teamA" class="team-picker">${teamPickerOpts(tAIdx)}</select>` : ""}
             <div class="pair-select">
-              <select data-field="a1">${memberOpts(tAIdx)}</select>
+              <select data-field="a1">${a1Opts}</select>
               <span class="vs">+</span>
-              <select data-field="a2">${memberOpts(tAIdx)}</select>
+              <select data-field="a2">${a2Opts}</select>
             </div>
           </div>
         </td>
@@ -1962,9 +2380,9 @@ Riley"
           <div class="${multiTeam ? "team-pick-wrap" : ""}">
             ${multiTeam ? `<select data-field="teamB" class="team-picker">${teamPickerOpts(tBIdx)}</select>` : ""}
             <div class="pair-select">
-              <select data-field="b1">${memberOpts(tBIdx)}</select>
+              <select data-field="b1">${b1Opts}</select>
               <span class="vs">+</span>
-              <select data-field="b2">${memberOpts(tBIdx)}</select>
+              <select data-field="b2">${b2Opts}</select>
             </div>
           </div>
         </td>
@@ -1972,8 +2390,6 @@ Riley"
           <input type="text" class="notes-input" data-field="notes" placeholder="e.g. great rally">
         </td>
       `;
-
-                    // Restore persisted values
                     tr.querySelector('[data-field="a1"]').value = s.a1;
                     tr.querySelector('[data-field="a2"]').value = s.a2;
                     tr.querySelector('[data-field="b1"]').value = s.b1;
@@ -1981,11 +2397,8 @@ Riley"
                     tr.querySelector('[data-field="scoreA"]').value = s.scoreA;
                     tr.querySelector('[data-field="scoreB"]').value = s.scoreB;
                     tr.querySelector('[data-field="notes"]').value = s.notes;
-
                     matchlogBody.appendChild(tr);
                 }
-
-                // Totals row
                 matchlogFoot.innerHTML = `
       <tr class="totals-row">
         <td colspan="1" class="total-label">Totals</td>
@@ -1995,63 +2408,126 @@ Riley"
         <td id="winnerCell"></td>
       </tr>
     `;
+            }
 
-                updateTotals();
+            function _buildRoundCards(numRounds, multiTeam) {
+                const list = document.getElementById("matchlogList");
+                list.innerHTML = "";
+                for (let i = 0; i < numRounds; i++) {
+                    const s = matchlogState[i];
+                    const tAIdx = s.teamA ?? 0;
+                    const tBIdx = s.teamB ?? 1;
+                    const colorA = PALETTE[tAIdx % PALETTE.length];
+                    const colorB = PALETTE[tBIdx % PALETTE.length];
+                    if (lastTeams[tAIdx] && lastTeams[tAIdx].length === 2) {
+                        s.a1 = lastTeams[tAIdx][0]; s.a2 = lastTeams[tAIdx][1];
+                    }
+                    if (lastTeams[tBIdx] && lastTeams[tBIdx].length === 2) {
+                        s.b1 = lastTeams[tBIdx][0]; s.b2 = lastTeams[tBIdx][1];
+                    }
+                    const a1Opts = memberOpts(tAIdx, s.a2);
+                    const a2Opts = memberOpts(tAIdx, s.a1);
+                    const b1Opts = memberOpts(tBIdx, s.b2);
+                    const b2Opts = memberOpts(tBIdx, s.b1);
+                    const card = document.createElement("div");
+                    card.className = "round-card";
+                    card.dataset.round = i;
+                    card.innerHTML = `
+          <div class="round-card-header">
+            <span class="round-num">R${i + 1}</span>
+          </div>
+          <div class="round-card-section round-card-section-a" style="border-left:4px solid ${colorA.bg}">
+            <div class="round-card-label">Team ${escapeHtml(colorA.name)}</div>
+            ${multiTeam ? `<select class="round-card-team-picker" data-field="teamA">${teamPickerOpts(tAIdx)}</select>` : ""}
+            <div class="round-card-pair">
+              <select data-field="a1">${a1Opts}</select>
+              <span class="vs">+</span>
+              <select data-field="a2">${a2Opts}</select>
+            </div>
+          </div>
+          <div class="round-card-score">
+            <input type="number" data-field="scoreA" min="0" max="99" placeholder="–">
+            <span class="dash">–</span>
+            <input type="number" data-field="scoreB" min="0" max="99" placeholder="–">
+          </div>
+          <div class="round-card-section round-card-section-b" style="border-left:4px solid ${colorB.bg}">
+            <div class="round-card-label">Team ${escapeHtml(colorB.name)}</div>
+            ${multiTeam ? `<select class="round-card-team-picker" data-field="teamB">${teamPickerOpts(tBIdx)}</select>` : ""}
+            <div class="round-card-pair">
+              <select data-field="b1">${b1Opts}</select>
+              <span class="vs">+</span>
+              <select data-field="b2">${b2Opts}</select>
+            </div>
+          </div>
+          <div class="round-card-section round-card-notes">
+            <div class="round-card-label">Notes</div>
+            <input type="text" data-field="notes" placeholder="e.g. great rally">
+          </div>
+        `;
+                    card.querySelector('[data-field="a1"]').value = s.a1;
+                    card.querySelector('[data-field="a2"]').value = s.a2;
+                    card.querySelector('[data-field="b1"]').value = s.b1;
+                    card.querySelector('[data-field="b2"]').value = s.b2;
+                    card.querySelector('[data-field="scoreA"]').value = s.scoreA;
+                    card.querySelector('[data-field="scoreB"]').value = s.scoreB;
+                    card.querySelector('[data-field="notes"]').value = s.notes;
+                    list.appendChild(card);
+                }
+                // Totals card
+                const tc = document.createElement("div");
+                tc.className = "totals-card";
+                tc.innerHTML = `
+          <div>
+            <div class="totals-label">Totals</div>
+            <div class="totals-score"><span id="mTotalA">0</span> — <span id="mTotalB">0</span></div>
+          </div>
+          <div class="totals-winner" id="mWinner"></div>
+        `;
+                list.appendChild(tc);
             }
 
             function updateTotals() {
-                let totalA = 0,
-                    totalB = 0;
-                let winsA = 0,
-                    winsB = 0;
-                const rows = matchlogBody.querySelectorAll("tr");
-                rows.forEach((tr) => {
-                    const sA = parseInt(
-                        tr.querySelector('[data-field="scoreA"]').value,
-                        10,
-                    );
-                    const sB = parseInt(
-                        tr.querySelector('[data-field="scoreB"]').value,
-                        10,
-                    );
-                    tr.classList.remove("winner-a", "winner-b");
+                let totalA = 0, totalB = 0;
+                const isMobile = window.matchMedia("(max-width: 719px)").matches;
+                matchlogState.forEach((s, i) => {
+                    const sA = parseInt(s.scoreA, 10);
+                    const sB = parseInt(s.scoreB, 10);
                     if (!isNaN(sA)) totalA += sA;
                     if (!isNaN(sB)) totalB += sB;
-                    if (!isNaN(sA) && !isNaN(sB)) {
-                        if (sA > sB) {
-                            tr.classList.add("winner-a");
-                            winsA++;
-                        } else if (sB > sA) {
-                            tr.classList.add("winner-b");
-                            winsB++;
+                    const el = isMobile
+                        ? document.querySelector(`.round-card[data-round="${i}"]`)
+                        : matchlogBody.querySelector(`tr[data-round="${i}"]`);
+                    if (el) {
+                        el.classList.remove("winner-a", "winner-b");
+                        if (!isNaN(sA) && !isNaN(sB)) {
+                            if (sA > sB) el.classList.add("winner-a");
+                            else if (sB > sA) el.classList.add("winner-b");
                         }
                     }
                 });
+                const teams = getTeamLabels();
+                const twoTeams = teams && teams.length === 2;
+                let winnerHtml = "";
+                if (totalA > totalB) winnerHtml = twoTeams ? `🏆 <strong>${escapeHtml(teams[0].name)}</strong> leads` : "🏆 Side A leads";
+                else if (totalB > totalA) winnerHtml = twoTeams ? `🏆 <strong>${escapeHtml(teams[1].name)}</strong> leads` : "🏆 Side B leads";
+                else if (totalA > 0) winnerHtml = "🤝 Tied";
+                // Desktop totals
                 const totalAEl = document.getElementById("totalA");
                 const totalBEl = document.getElementById("totalB");
                 const winnerCell = document.getElementById("winnerCell");
                 if (totalAEl) totalAEl.textContent = totalA;
                 if (totalBEl) totalBEl.textContent = totalB;
-                if (winnerCell) {
-                    const teams = getTeamLabels();
-                    const twoTeams = teams && teams.length === 2;
-                    if (totalA > totalB) {
-                        winnerCell.innerHTML = twoTeams
-                            ? `🏆 <strong>${escapeHtml(teams[0].name)}</strong> leads`
-                            : "🏆 Side A leads";
-                    } else if (totalB > totalA) {
-                        winnerCell.innerHTML = twoTeams
-                            ? `🏆 <strong>${escapeHtml(teams[1].name)}</strong> leads`
-                            : "🏆 Side B leads";
-                    } else if (totalA > 0 && totalA === totalB) {
-                        winnerCell.textContent = "🤝 Tied";
-                    } else {
-                        winnerCell.textContent = "";
-                    }
-                }
+                if (winnerCell) winnerCell.innerHTML = winnerHtml;
+                // Mobile totals
+                const mA = document.getElementById("mTotalA");
+                const mB = document.getElementById("mTotalB");
+                const mW = document.getElementById("mWinner");
+                if (mA) mA.textContent = totalA;
+                if (mB) mB.textContent = totalB;
+                if (mW) mW.innerHTML = winnerHtml;
             }
 
-            // Listen for any change inside the match log to update state + totals
+            // ── Match log event delegation (desktop table) ───────────────────────────
             matchlogBody.addEventListener("input", (e) => {
                 const tr = e.target.closest("tr");
                 if (!tr) return;
@@ -2063,7 +2539,6 @@ Riley"
                 debouncedPushMatchlog();
             });
             matchlogBody.addEventListener("change", (e) => {
-                // Selects fire 'change' rather than 'input' on some browsers
                 const tr = e.target.closest("tr");
                 if (!tr) return;
                 const round = parseInt(tr.dataset.round, 10);
@@ -2073,16 +2548,91 @@ Riley"
                 if (field === "teamA" || field === "teamB") {
                     const newIdx = parseInt(e.target.value, 10);
                     matchlogState[round][field] = newIdx;
+                    const newTeam = lastTeams && lastTeams[newIdx];
+                    const autoPair = newTeam && newTeam.length === 2;
                     if (field === "teamA") {
-                        matchlogState[round].a1 = "";
-                        matchlogState[round].a2 = "";
-                        tr.querySelector('[data-field="a1"]').innerHTML = memberOpts(newIdx);
-                        tr.querySelector('[data-field="a2"]').innerHTML = memberOpts(newIdx);
+                        matchlogState[round].a1 = autoPair ? newTeam[0] : "";
+                        matchlogState[round].a2 = autoPair ? newTeam[1] : "";
+                        tr.querySelector('[data-field="a1"]').innerHTML = memberOpts(newIdx, matchlogState[round].a2);
+                        tr.querySelector('[data-field="a2"]').innerHTML = memberOpts(newIdx, matchlogState[round].a1);
+                        tr.querySelector('[data-field="a1"]').value = matchlogState[round].a1;
+                        tr.querySelector('[data-field="a2"]').value = matchlogState[round].a2;
                     } else {
-                        matchlogState[round].b1 = "";
-                        matchlogState[round].b2 = "";
-                        tr.querySelector('[data-field="b1"]').innerHTML = memberOpts(newIdx);
-                        tr.querySelector('[data-field="b2"]').innerHTML = memberOpts(newIdx);
+                        matchlogState[round].b1 = autoPair ? newTeam[0] : "";
+                        matchlogState[round].b2 = autoPair ? newTeam[1] : "";
+                        tr.querySelector('[data-field="b1"]').innerHTML = memberOpts(newIdx, matchlogState[round].b2);
+                        tr.querySelector('[data-field="b2"]').innerHTML = memberOpts(newIdx, matchlogState[round].b1);
+                        tr.querySelector('[data-field="b1"]').value = matchlogState[round].b1;
+                        tr.querySelector('[data-field="b2"]').value = matchlogState[round].b2;
+                    }
+                } else if (["a1", "a2", "b1", "b2"].includes(field)) {
+                    matchlogState[round][field] = e.target.value;
+                    const partnerMap = { a1: "a2", a2: "a1", b1: "b2", b2: "b1" };
+                    const partner = partnerMap[field];
+                    const teamIdx = field.startsWith("a")
+                        ? (matchlogState[round].teamA ?? 0)
+                        : (matchlogState[round].teamB ?? 1);
+                    if (e.target.value !== "" && matchlogState[round][partner] === e.target.value) {
+                        matchlogState[round][partner] = "";
+                    }
+                    const partnerSel = tr.querySelector(`[data-field="${partner}"]`);
+                    if (partnerSel) {
+                        partnerSel.innerHTML = memberOpts(teamIdx, e.target.value);
+                        partnerSel.value = matchlogState[round][partner] || "";
+                    }
+                } else {
+                    matchlogState[round][field] = e.target.value;
+                }
+                pushMatchlog();
+            });
+
+            // ── Match log event delegation (mobile round-cards) ──────────────────────
+            const matchlogList = document.getElementById("matchlogList");
+            matchlogList.addEventListener("input", (e) => {
+                const card = e.target.closest(".round-card");
+                if (!card) return;
+                const round = parseInt(card.dataset.round, 10);
+                const field = e.target.dataset.field;
+                if (field == null || isNaN(round)) return;
+                matchlogState[round][field] = e.target.value;
+                if (field === "scoreA" || field === "scoreB") updateTotals();
+                debouncedPushMatchlog();
+            });
+            matchlogList.addEventListener("change", (e) => {
+                const card = e.target.closest(".round-card");
+                if (!card) return;
+                const round = parseInt(card.dataset.round, 10);
+                const field = e.target.dataset.field;
+                if (field == null || isNaN(round)) return;
+
+                if (field === "teamA" || field === "teamB") {
+                    const newIdx = parseInt(e.target.value, 10);
+                    matchlogState[round][field] = newIdx;
+                    const newTeam = lastTeams && lastTeams[newIdx];
+                    const autoPair = newTeam && newTeam.length === 2;
+                    if (field === "teamA") {
+                        matchlogState[round].a1 = autoPair ? newTeam[0] : "";
+                        matchlogState[round].a2 = autoPair ? newTeam[1] : "";
+                    } else {
+                        matchlogState[round].b1 = autoPair ? newTeam[0] : "";
+                        matchlogState[round].b2 = autoPair ? newTeam[1] : "";
+                    }
+                    buildMatchLog();
+                    return;
+                } else if (["a1", "a2", "b1", "b2"].includes(field)) {
+                    matchlogState[round][field] = e.target.value;
+                    const partnerMap = { a1: "a2", a2: "a1", b1: "b2", b2: "b1" };
+                    const partner = partnerMap[field];
+                    const teamIdx = field.startsWith("a")
+                        ? (matchlogState[round].teamA ?? 0)
+                        : (matchlogState[round].teamB ?? 1);
+                    if (e.target.value !== "" && matchlogState[round][partner] === e.target.value) {
+                        matchlogState[round][partner] = "";
+                    }
+                    const partnerSel = card.querySelector(`[data-field="${partner}"]`);
+                    if (partnerSel) {
+                        partnerSel.innerHTML = memberOpts(teamIdx, e.target.value);
+                        partnerSel.value = matchlogState[round][partner] || "";
                     }
                 } else {
                     matchlogState[round][field] = e.target.value;
@@ -2178,8 +2728,6 @@ Riley"
 
             // --- Events ---
             splitBtn.addEventListener("click", doSplit);
-            reshuffleBtn.addEventListener("click", doSplit);
-            copyBtn.addEventListener("click", copyResult);
 
             function resetAll() {
                 animationToken++; // cancel any running animation
@@ -2188,15 +2736,14 @@ Riley"
                 namesEl.value = "";
                 teamCountEl.value = 2;
                 lastTeams = null;
+                lastSequence = null;
                 resultsEl.innerHTML = "";
                 resultsCard.style.display = "none";
-                reshuffleBtn.style.display = "none";
-                copyBtn.style.display = "none";
-
                 // Clear match log
                 matchlogState = [];
                 matchlogBody.innerHTML = "";
                 matchlogFoot.innerHTML = "";
+                document.getElementById("matchlogList").innerHTML = "";
                 matchlogCard.style.display = "none";
                 roundCountEl.value = 8;
 
@@ -2211,6 +2758,7 @@ Riley"
                     if (input) input.checked = true;
                 }
 
+                setModeUI("random");
                 updateCount();
                 namesEl.focus();
                 showToast("Cleared", "success");
@@ -2232,6 +2780,7 @@ Riley"
                     (parseInt(teamCountEl.value, 10) || 0) + 1,
                 );
                 teamCountEl.value = v;
+                if (getMode() === "manual") renderManualInputs();
                 pushSetup();
             });
             decBtn.addEventListener("click", () => {
@@ -2240,6 +2789,7 @@ Riley"
                     (parseInt(teamCountEl.value, 10) || 2) - 1,
                 );
                 teamCountEl.value = v;
+                if (getMode() === "manual") renderManualInputs();
                 pushSetup();
             });
 
@@ -2248,6 +2798,7 @@ Riley"
                     chips.forEach((c) => c.classList.remove("active"));
                     chip.classList.add("active");
                     chip.querySelector("input").checked = true;
+                    setModeUI(getMode());
                     pushSetup();
                 });
             });
@@ -2257,6 +2808,14 @@ Riley"
                 if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                     e.preventDefault();
                     doSplit();
+                }
+            });
+
+            // Manual team textareas → update count + push setup
+            document.getElementById("manualTeams").addEventListener("input", (e) => {
+                if (e.target.tagName === "TEXTAREA") {
+                    updateCount();
+                    debouncedPushSetup();
                 }
             });
 
@@ -2284,8 +2843,27 @@ Riley"
                     );
                 });
 
-            // Initial count
+            // ── Sticky CTA bar (mobile) ───────────────────────────────────────────────
+            const stickyBar = document.getElementById("stickyBar");
+            const stickyBtn = document.getElementById("stickyBtn");
+            stickyBtn.addEventListener("click", doSplit);
+
+            // Show sticky bar only when the in-card splitBtn is not visible
+            if (typeof IntersectionObserver !== "undefined") {
+                new IntersectionObserver(([entry]) => {
+                    if (window.matchMedia("(min-width: 720px)").matches) return;
+                    stickyBar.classList.toggle("show", !entry.isIntersecting);
+                }, { threshold: 0.1 }).observe(splitBtn);
+            }
+
+            // ── Match log re-render on viewport flip ──────────────────────────────────
+            window.matchMedia("(max-width: 719px)").addEventListener("change", () => {
+                if (lastTeams && lastTeams.length >= 2) buildMatchLog();
+            });
+
+            // Initial count + mode UI
             updateCount();
+            setModeUI(getMode());
             // Boot Firebase sync if a session is in the URL
             initSync();
         </script>
