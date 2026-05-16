@@ -18,8 +18,6 @@ flashcards:
     a: "`restart` stops and starts the service (new PID). `reload` sends SIGHUP to re-read config without stopping (same PID, if supported)."
   - q: "How do you list all systemd services (including inactive)?"
     a: "`systemctl list-units --type service --all`"
-  - q: "What signal does `systemctl reload` typically send to a process?"
-    a: "It usually sends `SIGHUP` to tell the process to re-read its configuration files."
 quiz:
   title: "SystemD Mastery Quiz"
   questions:

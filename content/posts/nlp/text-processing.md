@@ -33,13 +33,6 @@ quiz:
         - "Stemming requires access to a lexical database"
         - "Stemming only works for irregular verbs"
       correct: 1
-    - q: "Which statement about stemming is accurate?"
-      options:
-        - "Stemming is a linguistically principled process"
-        - "Stemming requires access to a lexical database"
-        - "Stemming only works for regular verbs"
-        - "Stemming is a more crude, heuristic process"
-      correct: 3
     - q: "How many stop words are there in English?"
       options:
         - "More than 87"
@@ -130,8 +123,6 @@ flashcards:
     a: "Sentence tokenisation → word tokenisation → POS tagging → lemmatising → stop word removal → stemming. POS tagging before lemmatisation ensures context-sensitive root resolution."
   - q: "What challenge does the sentence 'Prof. Russell-Rose uses TF.IDF when parsing data from Which? reports' pose for sentence tokenisation?"
     a: "Periods in 'Prof.' and 'TF.IDF' are not sentence boundaries; '?' in 'Which?' is a brand name, not a question. These abbreviations and embedded punctuation cause false sentence splits."
-  - q: "What regex matches any non-word characters at the end of a string?"
-    a: "\\W$ — \\W matches non-word characters, $ anchors to the end of the string."
 
 ---
 

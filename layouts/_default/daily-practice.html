@@ -1,20 +1,11 @@
 {{- define "main" }}
 
-{{- /* Aggregate quiz questions and flashcards from all posts */ -}}
-{{- $allQuestions := slice }}
-{{- $allCards := slice }}
-{{- range where .Site.RegularPages "Section" "posts" }}
-  {{- if .Params.quiz }}
-    {{- range .Params.quiz.questions }}
-      {{- $allQuestions = $allQuestions | append . }}
-    {{- end }}
-  {{- end }}
-  {{- if .Params.flashcards }}
-    {{- range .Params.flashcards }}
-      {{- $allCards = $allCards | append . }}
-    {{- end }}
-  {{- end }}
-{{- end }}
+{{- /* Aggregate quiz questions and flashcards from all posts, including drafts.
+       Drafts are excluded from .Site.RegularPages, so we read frontmatter
+       directly off the filesystem. */ -}}
+{{- $study := partial "collect-study.html" "content/posts" }}
+{{- $allQuestions := $study.questions }}
+{{- $allCards := $study.cards }}
 
 {{- $questions := first 5 (shuffle $allQuestions) }}
 {{- $cards := first 5 (shuffle $allCards) }}

@@ -50,13 +50,6 @@ quiz:
         - "They have higher priority in the scheduler"
         - "They do not require the JIT compiler"
       correct: 1
-    - q: "Where does an eBPF program physically execute?"
-      options:
-        - "In a user-space daemon"
-        - "In a dedicated micro-controller on the NIC"
-        - "Inside the kernel space"
-        - "In a sandboxed WASM runtime"
-      correct: 2
 ---
 
 ## Definition & How it works

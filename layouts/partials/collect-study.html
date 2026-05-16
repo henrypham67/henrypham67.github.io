@@ -1,0 +1,42 @@
+{{- /*
+  Recursively walks a directory of markdown content and returns
+  { "questions": [...], "cards": [...] } pulled from each file's
+  YAML frontmatter. Unlike .Site.RegularPages, this includes drafts.
+
+  Call with a path string relative to the project root, e.g.
+    {{ $study := partial "collect-study.html" "content/posts" }}
+*/ -}}
+{{- $dir := . -}}
+{{- $questions := slice -}}
+{{- $cards := slice -}}
+{{- range os.ReadDir $dir -}}
+  {{- $path := printf "%s/%s" $dir .Name -}}
+  {{- if .IsDir -}}
+    {{- $sub := partial "collect-study.html" $path -}}
+    {{- $questions = $questions | append $sub.questions -}}
+    {{- $cards = $cards | append $sub.cards -}}
+  {{- else if and (strings.HasSuffix .Name ".md") (ne .Name "_index.md") -}}
+    {{- $raw := readFile $path -}}
+    {{- if strings.HasPrefix $raw "---" -}}
+      {{- $body := strings.TrimPrefix "---\n" $raw -}}
+      {{- $fmStr := index (split $body "\n---") 0 -}}
+      {{- $fm := dict -}}
+      {{- with $fmStr -}}
+        {{- $fm = transform.Unmarshal . -}}
+      {{- end -}}
+      {{- with $fm.quiz -}}
+        {{- with .questions -}}
+          {{- range . -}}
+            {{- $questions = $questions | append . -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- with $fm.flashcards -}}
+        {{- range . -}}
+          {{- $cards = $cards | append . -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "questions" $questions "cards" $cards -}}
