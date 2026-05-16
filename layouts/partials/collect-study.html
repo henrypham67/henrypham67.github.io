@@ -13,8 +13,8 @@
   {{- $path := printf "%s/%s" $dir .Name -}}
   {{- if .IsDir -}}
     {{- $sub := partial "collect-study.html" $path -}}
-    {{- $questions = $questions | append $sub.questions -}}
-    {{- $cards = $cards | append $sub.cards -}}
+    {{- range $sub.questions -}}{{- $questions = $questions | append . -}}{{- end -}}
+    {{- range $sub.cards -}}{{- $cards = $cards | append . -}}{{- end -}}
   {{- else if and (strings.HasSuffix .Name ".md") (ne .Name "_index.md") -}}
     {{- $raw := readFile $path -}}
     {{- if strings.HasPrefix $raw "---" -}}
